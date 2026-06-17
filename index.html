@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منتدى رافدين وأعماق | دليل الأكواريوم العربي للمياه العذبة</title>
+    <meta name="description" content="منتدى حواري مهني متخصص في تربية أسماك المياه العذبة بالوطن العربي والخليج. نقاشات حول كيمياء المياه، التبريد الصيفي، والأنواع النهرية المحلية.">
+    
+    <!-- Google Fonts: Tajawal & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Forum Navigation Header -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-section">
+                <a href="index.html" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 10px;">
+                    <div class="logo-icon">
+                        <svg style="width: 18px; height: 18px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        <h1>منتدى رافدين وأعماق</h1>
+                        <p>المجتمع الحواري للمياه العذبة في العراق والخليج</p>
+                    </div>
+                </a>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <!-- Theme Toggle Button -->
+                <button id="theme-btn" class="theme-toggle" onclick="toggleTheme()" aria-label="تبديل المظهر">
+                    🌙
+                </button>
+                
+                <a href="extensions/calculator/calculator.html" class="btn-primary" style="text-decoration: none;">
+                    🧮 <span class="nav-btn-text">الحاسبة البيئية</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <main class="app-container">
+        
+        <!-- Forum Feed -->
+        <section style="display: flex; flex-direction: column;">
+            
+            <!-- Category Filter Bar -->
+            <div class="forum-categories">
+                <button class="category-pill active" onclick="filterCategory('all')">كل المواضيع</button>
+                <button class="category-pill" onclick="filterCategory('cooling')">التبريد الصيفي</button>
+                <button class="category-pill" onclick="filterCategory('water')">كيمياء ومزج المياه</button>
+                <button class="category-pill" onclick="filterCategory('species')">الأسماك المحلية</button>
+                <button class="category-pill" onclick="filterCategory('filtration')">الفلترة والترشيح</button>
+            </div>
+
+            <!-- Threads List -->
+            <div class="threads-container" id="threads-list">
+                
+                <!-- Thread 1 -->
+                <a href="article.html?id=1" class="thread-row" data-category="cooling">
+                    <div class="thread-content">
+                        <div class="thread-header">
+                            <span class="thread-tag tag-cooling">تبريد الحوض</span>
+                            <span class="thread-meta">بواسطة <strong class="thread-author">أبو دجلة (البصرة)</strong></span>
+                        </div>
+                        <h3 class="thread-title">صيف 2026: كيف تواجه حرارة المياه الاستثنائية بمروحة ومضخة هواء فقط؟</h3>
+                    </div>
+                    <div class="thread-stats">
+                        <div class="stat-item" style="margin-left: 16px;">
+                            <span class="stat-value" id="replies-count-1">0</span>
+                            <span class="stat-label">تعليق</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="views-count-1">0</span>
+                            <span class="stat-label">مشاهدة</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Thread 2 -->
+                <a href="article.html?id=2" class="thread-row" data-category="water">
+                    <div class="thread-content">
+                        <div class="thread-header">
+                            <span class="thread-tag tag-water">كيمياء المياه</span>
+                            <span class="thread-meta">بواسطة <strong class="thread-author">سلمان الخالدي (الدمام)</strong></span>
+                        </div>
+                        <h3 class="thread-title">ملوحة مياه الحنفية لدي تتجاوز 1300ppm. ما هي أفضل نسبة خلط مع مياه الـ RO؟</h3>
+                    </div>
+                    <div class="thread-stats">
+                        <div class="stat-item" style="margin-left: 16px;">
+                            <span class="stat-value" id="replies-count-2">0</span>
+                            <span class="stat-label">تعليق</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="views-count-2">0</span>
+                            <span class="stat-label">مشاهدة</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Thread 3 -->
+                <a href="article.html?id=3" class="thread-row" data-category="species">
+                    <div class="thread-content">
+                        <div class="thread-header">
+                            <span class="thread-tag tag-species">أسماك محلية</span>
+                            <span class="thread-meta">بواسطة <strong class="thread-author">فراس الرافد (بغداد)</strong></span>
+                        </div>
+                        <h3 class="thread-title">تربية أسماك البني والشبوط العراقي في أحواض 300 لتر: نصائح وحقائق</h3>
+                    </div>
+                    <div class="thread-stats">
+                        <div class="stat-item" style="margin-left: 16px;">
+                            <span class="stat-value" id="replies-count-3">0</span>
+                            <span class="stat-label">تعليق</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="views-count-3">0</span>
+                            <span class="stat-label">مشاهدة</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Thread 4 -->
+                <a href="article.html?id=4" class="thread-row" data-category="filtration">
+                    <div class="thread-content">
+                        <div class="thread-header">
+                            <span class="thread-tag">فلترة وتصفية</span>
+                            <span class="thread-meta">بواسطة <strong class="thread-author">خالد الكواري (الدوحة)</strong></span>
+                        </div>
+                        <h3 class="thread-title">حماية الأحواض المفتوحة من تكون طبقة الغبار الكثيفة بعد العاصفة الرملية</h3>
+                    </div>
+                    <div class="thread-stats">
+                        <div class="stat-item" style="margin-left: 16px;">
+                            <span class="stat-value" id="replies-count-4">0</span>
+                            <span class="stat-label">تعليق</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="views-count-4">0</span>
+                            <span class="stat-label">مشاهدة</span>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer style="padding: 24px; border-top: 1px solid var(--border-color); text-align: center; color: var(--text-muted); font-size: 11px; font-family: var(--font-arabic); margin-top: 60px;">
+        <p>© 2026 رافدين وأعماق. منتدى هواة الأكواريوم الإقليمي.</p>
+    </footer>
+
+    <!-- JS Logic for Theme & Dynamic Content -->
+    <script>
+        // Theme Management
+        function applySavedTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.getElementById('theme-btn').innerText = savedTheme === 'light' ? '🌙' : '🌞';
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            document.documentElement.setAttribute('data-theme', newTheme);
+            document.getElementById('theme-btn').innerText = newTheme === 'light' ? '🌙' : '🌞';
+        }
+
+        // Category Filter
+        function filterCategory(category) {
+            document.querySelectorAll('.category-pill').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.querySelectorAll('.thread-row').forEach(row => {
+                if (category === 'all' || row.getAttribute('data-category') === category) {
+                    row.style.display = 'flex';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // Initialize and load real data from localStorage
+        function loadStatsData() {
+            const baseData = {
+                1: { defaultViews: 142, defaultReplies: 8 },
+                2: { defaultViews: 98, defaultReplies: 5 },
+                3: { defaultViews: 124, defaultReplies: 6 },
+                4: { defaultViews: 56, defaultReplies: 3 }
+            };
+
+            for (let id in baseData) {
+                // Load or initialize views
+                let views = localStorage.getItem(`views_article_${id}`);
+                if (views === null) {
+                    views = baseData[id].defaultViews;
+                    localStorage.setItem(`views_article_${id}`, views);
+                }
+                document.getElementById(`views-count-${id}`).innerText = views;
+
+                // Load or initialize replies
+                let repliesKey = `replies_article_${id}`;
+                let replies = localStorage.getItem(repliesKey);
+                let count = baseData[id].defaultReplies;
+                if (replies !== null) {
+                    try {
+                        const parsed = JSON.parse(replies);
+                        count = baseData[id].defaultReplies + parsed.length;
+                    } catch (e) {}
+                }
+                document.getElementById(`replies-count-${id}`).innerText = count;
+            }
+        }
+
+        // On Load
+        window.addEventListener('DOMContentLoaded', () => {
+            applySavedTheme();
+            loadStatsData();
+        });
+    </script>
+</body>
+</html>

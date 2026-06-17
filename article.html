@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منتدى رافدين وأعماق | استعراض الموضوع</title>
+    
+    <!-- Google Fonts: Tajawal & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-section">
+                <a href="index.html" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 10px;">
+                    <div class="logo-icon">
+                        <svg style="width: 18px; height: 18px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        <h1>منتدى رافدين وأعماق</h1>
+                        <p>تصفح نقاشات الهواة</p>
+                    </div>
+                </a>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <!-- Conditional Calculator Link in Header -->
+                <a id="header-calc-link" href="extensions/calculator/calculator.html" class="btn-primary" style="display: none; text-decoration: none;">
+                    🧮 <span class="nav-btn-text">الحاسبة البيئية</span>
+                </a>
+
+                <!-- Theme Toggle Button -->
+                <button id="theme-btn" class="theme-toggle" onclick="toggleTheme()" aria-label="تبديل المظهر">
+                    🌙
+                </button>
+                
+                <a href="index.html" class="btn-secondary" style="text-decoration: none;">
+                    ← <span class="nav-btn-text">عودة للمنتدى</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="app-container">
+        
+        <!-- Back Link -->
+        <a href="index.html" class="back-link">
+            <span>→</span> عودة لقائمة المواضيع
+        </a>
+
+        <!-- Article Card Details -->
+        <article class="article-container" id="article-view">
+            <div class="article-header">
+                <span id="article-tag" class="thread-tag">جاري التحميل...</span>
+                <h2 id="article-title" class="article-title-text">...</h2>
+                <div class="thread-meta">
+                    <span>بواسطة <strong id="article-author" class="thread-author">...</strong></span>
+                    <span>•</span>
+                    <span>شوهد <strong id="article-views">0</strong> مرة</span>
+                </div>
+            </div>
+
+            <div id="article-content" class="article-body">
+                <!-- Dynamic Article content loads here -->
+            </div>
+
+            <!-- Support Me Widget (ادعمني) -->
+            <div class="support-card">
+                <h4 class="support-title">☕ ادعم الكاتب والمشروع (Support Me)</h4>
+                <p class="support-text">
+                    إذا وجدت هذا المقال الحواري مفيداً، يمكنك دعم الكاتب لمواصلة تقديم شروحات احترافية وتوفير حاسبات متقدمة مجانية لهواة الأكواريوم في المنطقة.
+                </p>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button class="btn-primary" style="font-size: 11px; padding: 6px 12px;" onclick="showSupportAlert('قهوة للكاتب')">☕ شراء قهوة للكاتب (5$)</button>
+                    <button class="btn-secondary" style="font-size: 11px; padding: 6px 12px;" onclick="showSupportAlert('دعم الخادم')">🖥️ المساهمة في استضافة المنصة (10$)</button>
+                </div>
+            </div>
+        </article>
+
+        <!-- Comments Section -->
+        <section class="comments-section">
+            <h3 class="comments-heading">الردود والمشاركات التفاعلية (<span id="comments-count">0</span>)</h3>
+            
+            <!-- Comment Form -->
+            <div class="comment-box">
+                <h4 style="font-size: 13px; font-weight: 700; margin-bottom: 6px; color: var(--text-secondary);">أضف مشاركة أو استفساراً:</h4>
+                <div style="display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 8px;">
+                    <input type="text" id="comment-author-input" class="calc-number-field" style="text-align: right; padding: 8px 12px;" placeholder="اسمك المستعار (مثال: هاوٍ من بغداد)">
+                    <textarea id="comment-textarea" class="comment-textarea" placeholder="اكتب ردك أو استفسارك هنا بكل وضوح وعلمية..."></textarea>
+                </div>
+                <div style="text-align: left;">
+                    <button class="btn-primary" onclick="submitComment()">أرسل الرد</button>
+                </div>
+            </div>
+
+            <!-- Comment List mount point -->
+            <div class="comment-list" id="comments-list">
+                <!-- Dynamically generated comments -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer style="padding: 24px; border-top: 1px solid var(--border-color); text-align: center; color: var(--text-muted); font-size: 11px; font-family: var(--font-arabic); margin-top: 60px;">
+        <p>© 2026 رافدين وأعماق. كافة الحقوق محفوظة.</p>
+    </footer>
+
+    <!-- Database and script -->
+    <script>
+        // Article Database
+        const articlesDB = {
+            1: {
+                title: "صيف 2026: كيف تواجه حرارة المياه الاستثنائية بمروحة ومضخة هواء فقط؟",
+                author: "أبو دجلة (البصرة)",
+                category: "cooling",
+                tagName: "تبريد الحوض",
+                tagClass: "tag-cooling",
+                calculatorTab: "temp",
+                body: `
+                    <p>مرحباً بجميع الهواة في المنطقة. نواجه هذا الصيف درجات حرارة قياسية تتعدى 48°م في جنوب العراق والخليج العربي. نظراً لأن مبردات الفريون الخارجية (Chillers) مكلفة جداً ولا يستطيع أغلب المربين اقتناءها، أقدم لكم دليلاً علمياً مبنياً على حركة السوائل وتبديد الطاقة الحرارية الكامنة بالتبخير الطبيعي.</p>
+                    
+                    <p><strong>1. تعزيز التبخر عبر تحريك سطح الماء:</strong></p>
+                    <p>الحل الأكثر كفاءة يبدأ من توجيه مخرج الفلتر أو مضخة تيار (Wavemaker) إلى الأعلى بزاوية تجعل سطح الماء في حركة متموجة قوية ومستمرة. تحطيم التوتر السطحي للمياه يرفع بشكل هائل من معدل التماس بين جزيئات الماء الساخن والهواء الجوي، مما يساعد في التبريد الذاتي الذاتي بفعل تبخر الجزيئات الأكثر سخونة.</p>
+
+                    <p><strong>2. استخدام مضخة هواء قوية:</strong></p>
+                    <p>تخسر المياه قدرتها على الاحتفاظ بالأكسجين المذاب كلما ارتفعت حرارتها. تشغيل مضخة هواء موصلة بأحجار هواء في قاع الحوض يحل مشكلتين: أولاً، تعويض الأكسجين لمنع اختناق الأسماك؛ ثانياً، دفع تيارات المياه الأكثر دفئاً في الأسفل للارتفاع للسطح وتسهيل تبريدها بالتبخر.</p>
+
+                    <p><strong>3. المراوح التبخيرية الموجهة:</strong></p>
+                    <p>قم بتركيب مروحة تبريد صغيرة (مثل مراوح الكمبيوتر 12 فولت) موجهة بزاوية 45 درجة نحو السطح المتموج. التبريد بالتبخر هنا قادر على خفض حرارة مياه الحوض بمقدار 2°م إلى 4°م عن حرارة الغرفة المحيطة.</p>
+
+                    <p><strong>تنبيه هام جداً:</strong> التبخير المكثف سيخفض منسوب المياه بسرعة. يجب تعويض الفاقد بماء التناضح العكسي (RO) الخالي تماماً من الأملاح. تجنب إضافة ماء الحنفية للتعويض، لأن التبخر يترك الأملاح خلفه، وإضافة مياه حنفية جديدة سيتسبب في تراكم الأملاح وارتفاع الـ TDS لمستويات سامة!</p>
+                `,
+                defaultReplies: [
+                    { author: "أبو أحمد (الكويت)", time: "منذ 4 ساعات", body: "شرح وافٍ وعلمي جداً. قمت بتطبيق فكرة المراوح مع مضخة الهواء وانخفضت الحرارة لدي من 31°م إلى 27.5°م في حوض 200 لتر خلال يومين فقط. شكراً لك." },
+                    { author: "يوسف الأنصاري (المنامة)", time: "منذ ساعتين", body: "تنبيه تعويض مياه التبخر بماء RO أنقذ حوضي! كنت أضيف ماء الصنبور وتفاجأت أن الـ TDS ارتفع من 300 إلى 800ppm دون أن أعرف السبب." }
+                ]
+            },
+            2: {
+                title: "ملوحة مياه الحنفية لدي تتجاوز 1300ppm. ما هي أفضل نسبة خلط مع مياه الـ RO؟",
+                author: "سلمان الخالدي (الدمام)",
+                category: "water",
+                tagName: "كيمياء المياه",
+                tagClass: "tag-water",
+                calculatorTab: "water",
+                body: `
+                    <p>السلام عليكم ورحمة الله وبركاته. يعاني أغلب المربين في الساحل الشرقي للمملكة والعراق من ارتفاع شديد في ملوحة مياه الحنفية (TDS) والتي تتراوح أحياناً بين 1100ppm إلى 1600ppm، إلى جانب ارتفاع قلوية المياه (pH 8.2 - 8.5).</p>
+                    
+                    <p>تربية معظم أسماك الزينة المستوردة أو النباتات المائية تتطلب مياه متوسطة العسر بملوحة تتراوح بين 150ppm إلى 300ppm. لحل هذه المشكلة بأقل تكلفة ممكنة، قمت باتباع طريقة خلط المياه كالتالي:</p>
+
+                    <p><strong>معادلة الخلط المقترحة:</strong></p>
+                    <p>إذا كانت ملوحة ماء الصنبور لديك 1200ppm وملوحة مياه محطة التناضح العكسي (RO) المنزلية تبلغ 15ppm، فإن خلط نسبة <strong>75% ماء RO مع 25% ماء حنفية</strong> سيعطيك مياه بملوحة إجمالية تقارب 310ppm وهي نسبة مثالية جداً.</p>
+
+                    <p><strong>كيفية تعديل الـ pH القلوي:</strong></p>
+                    <p>مياه الصنبور تحتوي على عسر كربونات قوي يقاوم انخفاض الـ pH. بعد تطبيق الخلط وتقليل العسر، ستتخلص المياه من قساوتها ويسهل خفض الـ pH. يمكن استخدام أخشاب المانغروف الطبيعية أو أوراق الكاتابا (اللوز الهندي) لخفض الرقم الهيدروجيني تدريجياً وبأمان تام دون استخدام أحماض كيميائية تضر الأسماك.</p>
+                `,
+                defaultReplies: [
+                    { author: "عمر العراقي (بغداد)", time: "منذ 8 ساعات", body: "طريقة الخلط هذه هي الطريقة الوحيدة التي مكنتني من تربية أسماك الديسكس الحساسة في بغداد. مياه الحنفية لدينا عسرة جداً والخلط بنسبة 3:1 (RO إلى حنفية) يعمل بامتياز." },
+                    { author: "فهد بن علي (الرياض)", time: "منذ 3 ساعات", body: "هل يمكن استخدام ماء مكثف المكيف (AC condensation water) كبديل لماء RO؟ قرأت أنه خالي من الأملاح." },
+                    { author: "سلمان الخالدي (الدمام)", time: "منذ ساعة واحدة", body: "أهلاً أخي فهد. مياه مكثف المكيف خالية من الأملاح نعم، لكنها تحتوي على جزيئات نحاس ومعادن سامة من أنابيب المكيف الداخلية، إلى جانب الغبار والبكتيريا الفطرية. لا ننصح بها مطلقاً لحوض الأسماك." }
+                ]
+            },
+            3: {
+                title: "تربية أسماك البني والشبوط العراقي في أحواض 300 لتر: نصائح وحقائق",
+                author: "فراس الرافد (بغداد)",
+                category: "species",
+                tagName: "أسماك محلية",
+                tagClass: "tag-species",
+                calculatorTab: null,
+                body: `
+                    <p>تتميز أنهار دجلة والفرات بوجود أنواع محلية رائعة من الأسماك مثل البني والشبوط والقطان. يميل بعض الهواة لتربيتها في الأحواض المنزلية لمحاكاة البيئة النهرية لبلاد الرافدين. إليكم أهم الملاحظات الفنية لتربيتها:</p>
+
+                    <p><strong>1. المساحة الكافية وأبعاد الحوض:</strong></p>
+                    <p>تتميز هذه الأسماك بنشاط حركي عالٍ وسرعة سباحة فائقة مقارنة بأسماك الزينة العادية. حوض بسعة 300 لتر (طوله لا يقل عن 120 سم) يعتبر الحد الأدنى لتربية زوجين أو ثلاثة من الأحجام الصغيرة. الأحواض الضيقة تسبب لها القلق وتدفعها للقفز خارج الحوض.</p>
+
+                    <p><strong>2. الفلترة الفائقة للفضلات العضوية:</strong></p>
+                    <p>الأسماك النهرية المحلية تتغذى بشراهة وتنتج كميات كبيرة من المخلفات العضوية (الأمونيا والنترات). يتطلب الحوض فلترة خارجية قوية جداً (Canister filter) تضخ ما لا يقل عن 5 إلى 6 أضعاف حجم الحوض في الساعة، مع استخدام مادة السيراميك والبيو-بولز لتوفير بيئة لنمو البكتيريا النافعة.</p>
+
+                    <p><strong>3. محاكاة التيارات النهرية:</strong></p>
+                    <p>تفضل هذه الأسماك السباحة عكس التيار. استخدام مضخة تدفق خفيفة لمحاكاة تيار النهر الهادئ يضفي عليها حيوية ويحفز سلوكها الطبيعي.</p>
+                `,
+                defaultReplies: [
+                    { author: "حسن البصري (البصرة)", time: "منذ يوم واحد", body: "تربية أسماك البني رائعة جداً، ألوان قشورها الذهبية تحت الإضاءة مميزة. الفلترة هي السر الحقيقي لنجاح تربيتها." }
+                ]
+            },
+            4: {
+                title: "حماية الأحواض المفتوحة من تكون طبقة الغبار الكثيفة بعد العاصفة الرملية",
+                author: "خالد الكواري (الدوحة)",
+                category: "filtration",
+                tagName: "فلترة وتصفية",
+                tagClass: "tag-species",
+                calculatorTab: null,
+                body: `
+                    <p>تتعرض مدن الخليج العربي لعواصف غبارية دورية تؤثر بشكل مباشر على أحواض الأسماك المفتوحة (سواء الداخلية التي تفتقر لغطاء محكم أو الخارجية في الحدائق). ذرات الأتربة الناعمة تترسب على السطح وتشكل طبقة طينية تمنع التبادل الغازي وتسبب موت الأسماك اختناقاً.</p>
+
+                    <p><strong>خطوات الوقاية والمعالجة أثناء العاصفة الغبارية:</strong></p>
+                    <p><strong>1. الفلترة الميكانيكية المزدوجة:</strong> ضاعف كمية الصوف القطني الناعم (Filter Floss) في المرحلة الأولى من الفلتر. هذا الصوف يمسك بذرات الطين والأتربة الدقيقة ويمنع مرورها للماء. يجب تبديل الصوف كل 24 ساعة أثناء العاصفة لتجنب انسداد الفلتر.</p>
+
+                    <p><strong>2. قشاط السطح (Surface Skimmer):</strong> إذا كان الحوض كبيراً ومفتوحاً، فإن تركيب قشاط السطح يسحب الطبقة الغبارية والزيتية المتراكمة على السطح فوراً ويعيد توجيهها للفلتر.</p>
+
+                    <p><strong>3. إطفاء مضخات الهواء المفتوحة:</strong> تسحب مضخات الهواء الغبار من الغرفة وتنفثه داخل الماء مباشرة كفقاعات. يفضل تقليل تشغيل مضخة الهواء أو وضع فلتر إسفنجي على مدخل هواء المضخة لتصفية الغبار قبل نفثه.</p>
+                `,
+                defaultReplies: [
+                    { author: "سعود الدوسري (الخبر)", time: "منذ يومين", body: "ملاحظة إطفاء مضخات الهواء أثناء العواصف في غاية الأهمية. كانت المياه تتعكر لدي بشدة واكتشفت أن المضخة هي التي تسحب الغبار لداخل الحوض." }
+                ]
+            }
+        };
+
+        let currentArticleId = null;
+
+        // Get Article ID from URL Query
+        function getArticleId() {
+            const params = new URLSearchParams(window.location.search);
+            return parseInt(params.get('id'));
+        }
+
+        // Increment and display real views in localStorage
+        function handleViews(id) {
+            let views = localStorage.getItem(`views_article_${id}`);
+            if (views === null) {
+                views = 100; // sensible starting baseline
+            }
+            views = parseInt(views) + 1;
+            localStorage.setItem(`views_article_${id}`, views);
+            document.getElementById('article-views').innerText = views;
+        }
+
+        // Load Article Content
+        function loadArticle() {
+            const id = getArticleId();
+            currentArticleId = id;
+            const article = articlesDB[id];
+
+            if (!article) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            document.title = `${article.title} | منتدى رافدين وأعماق`;
+
+            document.getElementById('article-title').innerText = article.title;
+            document.getElementById('article-author').innerText = article.author;
+            
+            const tagEl = document.getElementById('article-tag');
+            tagEl.innerText = article.tagName;
+            tagEl.className = `thread-tag ${article.tagClass}`;
+
+            document.getElementById('article-content').innerHTML = article.body;
+
+            // Header Calculator tab link (conditional)
+            const calcHeaderLink = document.getElementById('header-calc-link');
+            if (article.calculatorTab) {
+                calcHeaderLink.style.display = 'inline-flex';
+                calcHeaderLink.href = `extensions/calculator/calculator.html#${article.calculatorTab}`;
+            } else {
+                calcHeaderLink.style.display = 'none';
+            }
+
+            // Handle views count
+            handleViews(id);
+
+            // Load replies / comments
+            renderComments();
+        }
+
+        // Render Comments List
+        function renderComments() {
+            const id = currentArticleId;
+            const article = articlesDB[id];
+            
+            const listContainer = document.getElementById('comments-list');
+            listContainer.innerHTML = '';
+
+            // 1. Render default replies
+            let commentsCount = article.defaultReplies.length;
+            article.defaultReplies.forEach(comment => {
+                listContainer.appendChild(createCommentDOM(comment.author, comment.time, comment.body, true));
+            });
+
+            // 2. Render user replies from localStorage
+            const userRepliesKey = `replies_article_${id}`;
+            let userReplies = localStorage.getItem(userRepliesKey);
+            if (userReplies) {
+                try {
+                    const parsed = JSON.parse(userReplies);
+                    commentsCount += parsed.length;
+                    parsed.forEach(comment => {
+                        listContainer.appendChild(createCommentDOM(comment.author, comment.time, comment.body, false));
+                    });
+                } catch (e) {}
+            }
+
+            document.getElementById('comments-count').innerText = commentsCount;
+        }
+
+        // Create comment element DOM helper
+        function createCommentDOM(author, time, body, isDefault) {
+            const div = document.createElement('div');
+            div.className = 'comment-item';
+            if (isDefault) {
+                div.style.borderRight = '3px solid var(--color-primary)';
+            } else {
+                div.style.borderRight = '3px solid var(--color-success)';
+            }
+            div.innerHTML = `
+                <div class="comment-meta">
+                    <span class="comment-author">${author} ${isDefault ? '<span class="badge badge-success" style="font-size: 8px; padding: 1px 4px; margin-right: 4px;">عضو موثق</span>' : '<span class="badge" style="background:rgba(16, 185, 129, 0.08); color:var(--color-success); font-size: 8px; padding: 1px 4px; margin-right: 4px;">عضو زائر</span>'}</span>
+                    <span>${time}</span>
+                </div>
+                <div class="comment-body">${body}</div>
+            `;
+            return div;
+        }
+
+        // Submit Comment
+        function submitComment() {
+            const authorInput = document.getElementById('comment-author-input');
+            const textarea = document.getElementById('comment-textarea');
+
+            const author = authorInput.value.trim() || "هاوٍ زائر";
+            const body = textarea.value.trim();
+
+            if (!body) {
+                alert("الرجاء كتابة رد أولاً!");
+                return;
+            }
+
+            const newComment = {
+                author: author,
+                time: "الآن",
+                body: body
+            };
+
+            const userRepliesKey = `replies_article_${currentArticleId}`;
+            let userReplies = localStorage.getItem(userRepliesKey);
+            let repliesArray = [];
+
+            if (userReplies) {
+                try {
+                    repliesArray = JSON.parse(userReplies);
+                } catch(e) {}
+            }
+
+            repliesArray.push(newComment);
+            localStorage.setItem(userRepliesKey, JSON.stringify(repliesArray));
+
+            // Reset fields
+            textarea.value = '';
+            
+            // Re-render
+            renderComments();
+        }
+
+        // Support Alert dialog
+        function showSupportAlert(type) {
+            alert(`شكرًا جزيلًا لاهتمامك بدعم المنصة عن طريق "${type}"! \n\nهذه الميزة تجريبية حالياً ومتاحة فقط لاستعراض الواجهة والتجربة (UI Prototype).`);
+        }
+
+        // Theme management
+        function applySavedTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.getElementById('theme-btn').innerText = savedTheme === 'light' ? '🌙' : '🌞';
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            document.documentElement.setAttribute('data-theme', newTheme);
+            document.getElementById('theme-btn').innerText = newTheme === 'light' ? '🌙' : '🌞';
+        }
+
+        // Load content on ready
+        window.addEventListener('DOMContentLoaded', () => {
+            applySavedTheme();
+            loadArticle();
+        });
+    </script>
+</body>
+</html>

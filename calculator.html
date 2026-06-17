@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة الأكواريوم المتقدمة 7 في 1 | رافدين وأعماق</title>
+    
+    <!-- Google Fonts: Tajawal & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Global Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        body {
+            font-family: var(--font-arabic);
+            font-size: 16px;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Layout Grid */
+        .calc-layout-container {
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 64px 16px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            flex-grow: 1;
+            box-sizing: border-box;
+        }
+
+        @media (min-width: 1024px) {
+            .calc-layout-container {
+                grid-template-columns: 300px 1fr;
+            }
+        }
+
+        /* Sidebar & Tab controls */
+        .calc-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .calc-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .calc-main-card {
+            padding: 24px;
+        }
+
+        @media (min-width: 640px) {
+            .calc-main-card {
+                padding: 32px;
+            }
+        }
+
+        .calc-sidebar-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--color-primary);
+            letter-spacing: 0.05em;
+            margin-top: 0;
+            margin-bottom: 16px;
+            padding-right: 4px;
+        }
+
+        .calc-tab-btn {
+            width: 100%;
+            text-align: right;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--font-arabic);
+            transition: var(--transition-fast);
+            margin-bottom: 4px;
+        }
+
+        .calc-tab-btn:last-child {
+            margin-bottom: 0;
+        }
+
+        .calc-tab-btn:hover {
+            color: var(--text-primary);
+            background-color: var(--bg-input);
+        }
+
+        .calc-tab-btn.active {
+            background-color: var(--color-primary);
+            color: #ffffff;
+            border-color: var(--color-primary);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.15);
+        }
+
+        .calc-tab-btn .indicator-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--text-muted);
+            flex-shrink: 0;
+            transition: background-color 0.2s ease;
+        }
+
+        .calc-tab-btn.active .indicator-dot {
+            background-color: #ffffff;
+        }
+
+        .calc-note-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Content area and panes */
+        .calc-content-area {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tab-pane {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .tab-pane.hidden {
+            display: none;
+        }
+
+        .pane-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-top: 0;
+            margin-bottom: 6px;
+        }
+
+        .pane-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        /* Input Controls */
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        @media (min-width: 640px) {
+            .input-grid.cols-3 {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .input-grid.cols-2 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .input-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .calc-input, .calc-select {
+            width: 100%;
+            padding: 11px 14px;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: var(--font-arabic);
+            transition: var(--transition-fast);
+            box-sizing: border-box;
+        }
+
+        .calc-input:focus, .calc-select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+        }
+
+        .input-stepper {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            width: 100%;
+            transition: var(--transition-fast);
+            box-sizing: border-box;
+        }
+
+        .input-stepper:focus-within {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+        }
+
+        .input-stepper .calc-input {
+            border: none;
+            border-radius: 0;
+            text-align: center;
+            background: transparent;
+            padding: 11px 0;
+            flex-grow: 1;
+            width: 50px;
+        }
+
+        .input-stepper .calc-input:focus {
+            box-shadow: none;
+            outline: none;
+        }
+
+        .stepper-btn {
+            width: 44px;
+            height: 42px;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            transition: var(--transition-fast);
+        }
+
+        .stepper-btn:hover {
+            background-color: rgba(255, 255, 255, 0.04);
+        }
+
+        .stepper-btn:active {
+            background-color: var(--color-primary);
+            color: #ffffff;
+        }
+
+        .calc-select option {
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        /* Style range sliders */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+            width: 100%;
+            margin: 8px 0;
+        }
+        input[type=range]:focus {
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            background: var(--bg-input);
+            border-radius: 3px;
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -5px;
+            box-shadow: 0 0 10px rgba(14, 165, 233, 0.3);
+            transition: transform 0.1s, background-color 0.2s;
+        }
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.25);
+            background: #38bdf8;
+        }
+
+        /* Results & Display */
+        .results-container {
+            background-color: rgba(14, 165, 233, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; /* Wrap on small screens to prevent clipping */
+            gap: 8px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .result-row:last-of-type {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .result-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .result-value {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .result-value.primary {
+            color: var(--color-primary);
+        }
+
+        .result-value.success {
+            color: var(--color-success);
+        }
+
+        .result-value.warning {
+            color: var(--color-warning);
+        }
+
+        .alert-note {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+            padding-top: 4px;
+        }
+
+        .advice-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--color-warning);
+            margin-top: 4px;
+            margin-bottom: 10px;
+        }
+
+        .advice-list {
+            list-style-type: decimal;
+            padding-right: 18px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .advice-list li {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .advice-list li strong {
+            color: var(--text-primary);
+        }
+
+        /* Badges */
+        .badge {
+            font-size: 13px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .badge-success {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--color-success);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+        }
+
+        .badge-warning {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--color-warning);
+            border: 1px solid rgba(245, 158, 11, 0.15);
+        }
+
+        .badge-danger {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.15);
+        }
+
+        /* Stocking Simulator Styles */
+        .stocking-simulator {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px dashed var(--border-color);
+        }
+
+        .sim-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-top: 0;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sim-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        @media (min-width: 768px) {
+            .sim-grid {
+                grid-template-columns: 1.2fr 1fr;
+            }
+        }
+
+        .fish-selector-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .fish-list-header {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .fish-item-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .fish-item-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .fish-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .fish-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .fish-size-badge {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .fish-qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .fish-qty-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-fast);
+        }
+
+        .fish-qty-btn:hover {
+            background-color: var(--color-primary);
+            color: #ffffff;
+            border-color: var(--color-primary);
+        }
+
+        .fish-qty-val {
+            font-size: 14px;
+            font-weight: 700;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .sim-results-card {
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            align-self: start;
+        }
+
+        .sim-metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sim-metric-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .sim-metric-value {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        /* Stocking Progress Bar */
+        .stocking-progress-bg {
+            height: 12px;
+            width: 100%;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 9999px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .stocking-progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: var(--color-success);
+            border-radius: 9999px;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+
+        .stocking-status-box {
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 13px;
+            line-height: 1.5;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .status-safe {
+            background-color: rgba(16, 185, 129, 0.08);
+            color: var(--color-success);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+        }
+
+        .status-warning {
+            background-color: rgba(245, 158, 11, 0.08);
+            color: var(--color-warning);
+            border: 1px solid rgba(245, 158, 11, 0.15);
+        }
+
+        .status-danger {
+            background-color: rgba(239, 68, 68, 0.08);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.15);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-section">
+                <a href="index.html" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 10px;">
+                    <div class="logo-icon">
+                        <svg style="width: 18px; height: 18px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        <h1>رافدين وأعماق</h1>
+                        <p>حاسبات الأكواريوم المتقدمة</p>
+                    </div>
+                </a>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <!-- Theme Toggle Button -->
+                <button id="theme-btn" class="theme-toggle" onclick="toggleTheme()" aria-label="تبديل المظهر">
+                    🌙
+                </button>
+                <a href="index.html" class="btn-secondary" style="text-decoration: none;">
+                    ← <span class="nav-btn-text">عودة للمنتدى</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="calc-layout-container">
+        
+        <!-- Left Side: Interactive Sidebar of 7 Tools Tabs (4 columns) -->
+        <aside class="calc-sidebar">
+            <div class="calc-card">
+                <h3 class="calc-sidebar-title">أدوات الحاسبة الـ 7</h3>
+                
+                <button onclick="switchTab('vol')" id="btn-tab-vol" class="calc-tab-btn active">
+                    <span class="indicator-dot"></span>
+                    1. حجم الحوض والقدرة الاستيعابية
+                </button>
+                
+                <button onclick="switchTab('temp')" id="btn-tab-temp" class="calc-tab-btn">
+                    <span class="indicator-dot"></span>
+                    2. أنظمة التبريد والتدفئة
+                </button>
+                
+                <button onclick="switchTab('water')" id="btn-tab-water" class="calc-tab-btn">
+                    <span class="indicator-dot"></span>
+                    3. معايير المياه الأساسية
+                </button>
+                
+                <button onclick="switchTab('mix')" id="btn-tab-mix" class="calc-tab-btn">
+                    <span class="indicator-dot"></span>
+                    4. خلط مياه الحنفية والـ RO
+                </button>
+                
+                <button onclick="switchTab('power')" id="btn-tab-power" class="calc-tab-btn">
+                    <span class="indicator-dot"></span>
+                    5. استهلاك الكهرباء الشهري
+                </button>
+                
+                <button onclick="switchTab('light')" id="btn-tab-light" class="calc-tab-btn">
+                    <span class="indicator-dot"></span>
+                    6. الإضاءة ومكافحة الطحالب
+                </button>
+                
+                <button onclick="switchTab('compat')" id="btn-tab-compat" class="calc-tab-btn">
+                    <span class="indicator-dot"></span>
+                    7. فحص التوافق بين الأسماك
+                </button>
+            </div>
+            
+            <div class="calc-note-card">
+                💡 <strong>ملاحظة إقليمية:</strong> الحسابات تمت مراجعتها لتلائم العسر الملحي لمياه بلاد الرافدين والشرق الأوسط والحرارة القصوى لصيف الخليج العربي.
+            </div>
+        </aside>
+
+        <!-- Right Side: Tool Panels -->
+        <section class="calc-content-area">
+            <div class="calc-card calc-main-card">
+                
+                <!-- Tool 1: Tank Volume & Stocking -->
+                <div id="pane-vol" class="tab-pane">
+                    <div>
+                        <h2 class="pane-title">1. حجم الحوض والقدرة الاستيعابية للأسماك</h2>
+                        <p class="pane-subtitle">حساب سعة المياه باللتر والحد الأقصى لطول الأسماك التراكمي المسموح به.</p>
+                    </div>
+                    
+                    <div class="input-grid cols-3">
+                        <div class="input-group">
+                            <label class="input-label">الطول (سم)</label>
+                            <div class="input-stepper">
+                                <button type="button" class="stepper-btn" onclick="stepValue('vol-len', -5)">-</button>
+                                <input type="number" id="vol-len" value="100" class="calc-input" oninput="runVolCalc()">
+                                <button type="button" class="stepper-btn" onclick="stepValue('vol-len', 5)">+</button>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">العرض (سم)</label>
+                            <div class="input-stepper">
+                                <button type="button" class="stepper-btn" onclick="stepValue('vol-wid', -5)">-</button>
+                                <input type="number" id="vol-wid" value="40" class="calc-input" oninput="runVolCalc()">
+                                <button type="button" class="stepper-btn" onclick="stepValue('vol-wid', 5)">+</button>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">الارتفاع (سم)</label>
+                            <div class="input-stepper">
+                                <button type="button" class="stepper-btn" onclick="stepValue('vol-hei', -5)">-</button>
+                                <input type="number" id="vol-hei" value="50" class="calc-input" oninput="runVolCalc()">
+                                <button type="button" class="stepper-btn" onclick="stepValue('vol-hei', 5)">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="results-container">
+                        <div class="result-row">
+                            <span class="result-label">حجم الحوض الإجمالي:</span>
+                            <span id="out-vol-liters" class="result-value primary">200 لتر</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label">السعة السمكية المتاحة (طول تراكمي):</span>
+                            <span id="out-vol-cm" class="result-value success">200 سم إجمالاً</span>
+                        </div>
+                        <p class="alert-note">
+                            ⚠️ تم الاحتساب استناداً لقاعدة (1 سم سمكة لكل 1 لتر ماء). يرجى مراعاة تقليص العدد بنسبة 40% للأسماك النهرية الكبيرة والنشطة مثل الشبوط والبني لتوفير حيز سباحة كافٍ.
+                        </p>
+                    </div>
+
+                    <!-- Interactive Stocking Simulator Section -->
+                    <div class="stocking-simulator">
+                        <h3 class="sim-title">
+                            📊 محاكي التسكين التفاعلي ودليل أحجام الأسماك الشائعة
+                        </h3>
+                        <p class="pane-subtitle" style="margin-bottom: 16px;">أضف أعداد الأسماك التي ترغب بتربيتها لمعرفة مدى ملاءمة الحوض لها استناداً لأحجامها المتوسطة عند البلوغ:</p>
+                        
+                        <div class="sim-grid">
+                            <!-- Fish Selection List -->
+                            <div class="fish-selector-card">
+                                <div class="fish-list-header">الأسماك الشائعة ومعدل حجمها</div>
+                                <div id="sim-fish-list">
+                                    <!-- Dynamic list of fishes will be generated by JS -->
+                                </div>
+                            </div>
+                            
+                            <!-- Live Stocking Results -->
+                            <div class="sim-results-card">
+                                <div class="sim-metric-row">
+                                    <span class="sim-metric-label">السعة القصوى المتاحة:</span>
+                                    <span id="sim-max-cap" class="sim-metric-value">200 سم</span>
+                                </div>
+                                <div class="sim-metric-row">
+                                    <span class="sim-metric-label">إجمالي طول الأسماك المخططة:</span>
+                                    <span id="sim-current-len" class="sim-metric-value">0 سم</span>
+                                </div>
+                                
+                                <div class="stocking-progress-bg">
+                                    <div id="sim-progress-bar" class="stocking-progress-bar"></div>
+                                </div>
+                                
+                                <div id="sim-status-box" class="stocking-status-box status-safe">
+                                    الحوض فارغ حالياً، يرجى إضافة بعض الأسماك للتحقق.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tool 2: Temp Control & Cooling -->
+                <div id="pane-temp" class="tab-pane hidden">
+                    <div>
+                        <h2 class="pane-title">2. أنظمة التبريد والتدفئة البديلة للشرق الأوسط</h2>
+                        <p class="pane-subtitle">حلول تبريد طبيعية تعتمد على فيزياء التبخر وحركة المياه دون الحاجة لمبردات فريون باهظة الثمن.</p>
+                    </div>
+                    
+                    <div class="input-grid cols-2">
+                        <div class="input-group">
+                            <label class="input-label">حجم الحوض (لتر)</label>
+                            <div class="input-stepper">
+                                <button type="button" class="stepper-btn" onclick="stepValue('temp-vol', -10)">-</button>
+                                <input type="number" id="temp-vol" value="200" class="calc-input" oninput="runTempCalc()">
+                                <button type="button" class="stepper-btn" onclick="stepValue('temp-vol', 10)">+</button>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">درجة حرارة الغرفة بالصيف (°م)</label>
+                            <div class="input-stepper">
+                                <button type="button" class="stepper-btn" onclick="stepValue('temp-ambient', -1)">-</button>
+                                <input type="number" id="temp-ambient" value="45" class="calc-input" oninput="runTempCalc()">
+                                <button type="button" class="stepper-btn" onclick="stepValue('temp-ambient', 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="results-container">
+                        <div class="result-row">
+                            <span class="result-label">الارتفاع الحراري المطلوب معالجته:</span>
+                            <span id="out-temp-delta" class="result-value primary">20°م</span>
+                        </div>
+                        
+                        <div>
+                            <h4 class="advice-title">إجراءات تبريد صيفية واقتصادية مقترحة:</h4>
+                            <ul id="out-temp-actions" class="advice-list">
+                                <!-- Generated list -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tool 3: Water Parameters (pH & TDS) -->
+                <div id="pane-water" class="tab-pane hidden">
+                    <div>
+                        <h2 class="pane-title">3. معايير المياه الأساسية وتعديلاتها</h2>
+                        <p class="pane-subtitle">توجيهات كيميائية مخصصة لخفض الملوحة والـ pH القلوي لمصادر المياه بالمنطقة.</p>
+                    </div>
+
+                    <div class="input-grid cols-2">
+                        <div class="input-group">
+                            <label class="input-label">الـ pH الحالي للحنفية</label>
+                            <div class="input-stepper">
+                                <button type="button" class="stepper-btn" onclick="stepValue('wat-curr-ph', -0.1)">-</button>
+                                <input type="number" step="0.1" id="wat-curr-ph" value="8.4" class="calc-input" oninput="runWaterCalc()">
+                                <button type="button" class="stepper-btn" onclick="stepValue('wat-curr-ph', 0.1)">+</button>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">الـ pH المستهدف للحوض</label>
+                            <div class="input-stepper">
+                                <button type="button" class="stepper-btn" onclick="stepValue('wat-targ-ph', -0.1)">-</button>
+                                <input type="number" step="0.1" id="wat-targ-ph" value="7.2" class="calc-input" oninput="runWaterCalc()">
+                                <button type="button" class="stepper-btn" onclick="stepValue('wat-targ-ph', 0.1)">+</button>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">ملوحة الصنبور الحالية (TDS - ppm)</label>
+                            <div class="input-stepper">
+                                <button type="button" class="stepper-btn" onclick="stepValue('wat-curr-tds', -50)">-</button>
+                                <input type="number" id="wat-curr-tds" value="1200" class="calc-input" oninput="runWaterCalc()">
+                                <button type="button" class="stepper-btn" onclick="stepValue('wat-curr-tds', 50)">+</button>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">الملوحة المستهدفة للحوض (TDS - ppm)</label>
+                            <div class="input-stepper">
+                                <button type="button" class="stepper-btn" onclick="stepValue('wat-targ-tds', -25)">-</button>
+                                <input type="number" id="wat-targ-tds" value="300" class="calc-input" oninput="runWaterCalc()">
+                                <button type="button" class="stepper-btn" onclick="stepValue('wat-targ-tds', 25)">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="results-container">
+                        <div class="result-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                            <span class="result-label">خطة تعديل الملوحة (TDS):</span>
+                            <span id="out-wat-tds-advice" class="result-value primary" style="font-size:12px; text-align:right; width:100%; margin-top:4px;">يجب خلط المياه بمياه تناضح عكسي (RO).</span>
+                        </div>
+                        <div class="result-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                            <span class="result-label">خطة خفض الرقم الهيدروجيني (pH):</span>
+                            <span id="out-wat-ph-advice" class="result-value success" style="font-size:12px; text-align:right; width:100%; margin-top:4px;">إضافة أوراق اللوز الهندي (الكاتابا) أو الخث الطبيعي.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tool 4: RO Mixing Ratio -->
+                <div id="pane-mix" class="tab-pane hidden">
+                    <div>
+                        <h2 class="pane-title">4. حساب نسب خلط مياه الحنفية والـ RO</h2>
+                        <p class="pane-subtitle">معادلة الخلط الدقيقة للوصول لملوحة TDS مثالية وصديقة للأسماك.</p>
+                    </div>
+
+                    <div class="input-grid cols-2">
+                        <div class="input-group">
+                            <label class="input-label">ملوحة مياه الصنبور (TDS - ppm)</label>
+                            <div class="input-stepper">
+                                <button type="button" class="stepper-btn" onclick="stepValue('mix-tap-tds', -50)">-</button>
+                                <input type="number" id="mix-tap-tds" value="1200" class="calc-input" oninput="runMixCalc()">
+                                <button type="button" class="stepper-btn" onclick="stepValue('mix-tap-tds', 50)">+</button>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">الملوحة المستهدفة للحوض (TDS - ppm)</label>
+                            <div class="input-stepper">
+                                <button type="button" class="stepper-btn" onclick="stepValue('mix-target-tds', -25)">-</button>
+                                <input type="number" id="mix-target-tds" value="300" class="calc-input" oninput="runMixCalc()">
+                                <button type="button" class="stepper-btn" onclick="stepValue('mix-target-tds', 25)">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="results-container">
+                        <div class="result-row">
+                            <span class="result-label">النسبة المئوية لمياه الـ RO النقية:</span>
+                            <span id="out-mix-ro-pct" class="result-value primary">76%</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label">النسبة المئوية لمياه الصنبور المعالجة:</span>
+                            <span id="out-mix-tap-pct" class="result-value success">24%</span>
+                        </div>
+                        <p class="alert-note">
+                            💡 يفترض الحساب أن ملوحة مياه الـ RO الناتجة من الفلتر المنزلي تتراوح حول 15ppm. خلط المياه هو الحل الأكثر أماناً لحماية الخواص الحيوية وتجنب صدمة الأسماك.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Tool 5: Monthly Electricity Consumption -->
+                <div id="pane-power" class="tab-pane hidden">
+                    <div>
+                        <h2 class="pane-title">5. حاسبة استهلاك الكهرباء الشهري للأجهزة</h2>
+                        <p class="pane-subtitle">تقدير التكلفة التقريبية للكهرباء المستهلكة من الفلاتر، الإضاءة، والمراوح شهرياً.</p>
+                    </div>
+
+                    <div class="input-grid cols-2">
+                        <div class="input-group">
+                            <label class="input-label">مجموع استهلاك الفلاتر والمضخات (واط)</label>
+                            <div class="input-stepper">
+                                <button type="button" class="stepper-btn" onclick="stepValue('pow-filter', -5)">-</button>
+                                <input type="number" id="pow-filter" value="25" class="calc-input" oninput="runPowerCalc()">
+                                <button type="button" class="stepper-btn" onclick="stepValue('pow-filter', 5)">+</button>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">استهلاك الإضاءة والمراوح (واط)</label>
+                            <div class="input-stepper">
+                                <button type="button" class="stepper-btn" onclick="stepValue('pow-light', -5)">-</button>
+                                <input type="number" id="pow-light" value="35" class="calc-input" oninput="runPowerCalc()">
+                                <button type="button" class="stepper-btn" onclick="stepValue('pow-light', 5)">+</button>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">استهلاك السخان / المكيف المخصص (واط)</label>
+                            <div class="input-stepper">
+                                <button type="button" class="stepper-btn" onclick="stepValue('pow-heater', -25)">-</button>
+                                <input type="number" id="pow-heater" value="150" class="calc-input" oninput="runPowerCalc()">
+                                <button type="button" class="stepper-btn" onclick="stepValue('pow-heater', 25)">+</button>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">تسعيرة الكيلوواط الساعي المحلية (مثال: فلس عراقي)</label>
+                            <div class="input-stepper">
+                                <button type="button" class="stepper-btn" onclick="stepValue('pow-tariff', -1)">-</button>
+                                <input type="number" id="pow-tariff" value="10" class="calc-input" oninput="runPowerCalc()">
+                                <button type="button" class="stepper-btn" onclick="stepValue('pow-tariff', 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="results-container">
+                        <div class="result-row">
+                            <span class="result-label">الاستهلاك الشهري التراكمي:</span>
+                            <span id="out-power-kwh" class="result-value primary">100 كيلوواط/ساعة</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label">التكلفة الشهرية التقريبية:</span>
+                            <span id="out-power-cost" class="result-value success">1,000 فلس</span>
+                        </div>
+                        <p class="alert-note">
+                            💡 الحساب مبني على تشغيل مستمر للفلاتر (24 ساعة)، والإضاءة والمراوح (8 ساعات)، والسخان/التكييف بمتوسط (12 ساعة يومياً).
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Tool 6: Lighting & Algae Control -->
+                <div id="pane-light" class="tab-pane hidden">
+                    <div>
+                        <h2 class="pane-title">6. الإضاءة ومكافحة الطحالب (الخز) في الصيف</h2>
+                        <p class="pane-subtitle">تجنب تفشي طحالب الصيف الحارة بتنظيم فترات الإضاءة وتقدير القدرة الكهربائية لمصابيح الـ LED.</p>
+                    </div>
+
+                    <div class="input-grid cols-2">
+                        <div class="input-group">
+                            <label class="input-label">نوع الحوض</label>
+                            <select id="light-type" class="calc-select" onchange="runLightCalc()">
+                                <option value="fish">حوض أسماك فقط (بدون نباتات طبيعية)</option>
+                                <option value="planted">حوض نباتي طبيعي (High Tech / Low Tech)</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">حجم الحوض (لتر)</label>
+                            <div class="input-stepper">
+                                <button type="button" class="stepper-btn" onclick="stepValue('light-vol', -10)">-</button>
+                                <input type="number" id="light-vol" value="200" class="calc-input" oninput="runLightCalc()">
+                                <button type="button" class="stepper-btn" onclick="stepValue('light-vol', 10)">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="results-container">
+                        <div class="result-row">
+                            <span class="result-label">شدة الإضاءة الموصى بها (LED):</span>
+                            <span id="out-light-watt" class="result-value primary">40 واط LED</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label">فترة الإضاءة الصيفية القصوى:</span>
+                            <span id="out-light-hours" class="result-value success">6 إلى 8 ساعات يومياً</span>
+                        </div>
+                        <p class="alert-note">
+                            ⚠️ ترتفه فرصة تفشي الطحالب (الخز الأخضر) في أحواضنا صيفاً بسبب ارتفاع درجات الحرارة المحيطة؛ تقليص فترة الإضاءة وتجنب أشعة الشمس المباشرة ضروري جداً.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Tool 7: Fish Compatibility Matrix -->
+                <div id="pane-compat" class="tab-pane hidden">
+                    <div>
+                        <h2 class="pane-title">7. فحص التوافق والتكافؤ بين الأسماك</h2>
+                        <p class="pane-subtitle">تجنب الصدمات البيئية أو الافتراس عبر فحص توافق الفصائل قبل إدخالها للحوض.</p>
+                    </div>
+
+                    <div class="input-grid cols-2">
+                        <div class="input-group">
+                            <label class="input-label">السمكة الأولى (فصيلة أ)</label>
+                            <select id="compat-fish-a" class="calc-select" onchange="runCompatCalc()">
+                                <option value="guppy">غابي / كابي (ولود هادئ)</option>
+                                <option value="oscar">أوسكار (سيكلايد وحشي شرس)</option>
+                                <option value="goldfish">جولد فيش / أورندا (مياه باردة)</option>
+                                <option value="discus">ديسكس (فاخر حساس)</option>
+                                <option value="neon">نيون تترا (مجتمع هادئ صغير)</option>
+                                <option value="flowerhorn">فلور هورن (عدواني جداً منفرد)</option>
+                                <option value="pleco">سمكة الزبال / كناس (هادئ منظف)</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">السمكة الثانية (فصيلة ب)</label>
+                            <select id="compat-fish-b" class="calc-select" onchange="runCompatCalc()">
+                                <option value="neon">نيون تترا (مجتمع هادئ صغير)</option>
+                                <option value="guppy">غابي / كابي (ولود هادئ)</option>
+                                <option value="oscar">أوسكار (سيكلايد وحشي شرس)</option>
+                                <option value="goldfish">جولد فيش / أورندا (مياه باردة)</option>
+                                <option value="discus">ديسكس (فاخر حساس)</option>
+                                <option value="flowerhorn">فلور هورن (عدواني جداً منفرد)</option>
+                                <option value="pleco">سمكة الزبال / كناس (هادئ منظف)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="results-container">
+                        <div class="result-row">
+                            <span class="result-label">حالة التوافق والتعايش:</span>
+                            <span id="out-compat-badge" class="badge badge-success">متوافق جداً</span>
+                        </div>
+                        <div class="result-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                            <span class="result-label">التقرير السلوكي والبيئي:</span>
+                            <p id="out-compat-text" class="alert-note" style="color:var(--text-secondary); width:100%; text-align:justify;">-</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer style="padding: 24px; border-top: 1px solid var(--border-color); text-align: center; color: var(--text-muted); font-size: 11px; font-family: 'Cairo', sans-serif;">
+        <p>© 2026 رافدين وأعماق. جميع الحقوق محفوظة. تم تطوير الأداة التفاعلية بأسلوب برمجي متميز وخبرة أكواريوم فائقة.</p>
+    </footer>
+
+    <!-- Scripts and Calculations -->
+    <script>
+        // Stepper value adjustment helper
+        function stepValue(inputId, step) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            let val = parseFloat(input.value) || 0;
+            val += step;
+            val = Math.round(val * 100) / 100;
+            let min = 0;
+            if (inputId === 'temp-ambient') {
+                min = -20;
+            }
+            if (val < min) val = min;
+            input.value = val;
+            input.dispatchEvent(new Event('input'));
+        }
+
+        // Tab Switcher
+        function switchTab(tabName) {
+            // Hide all panes
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.add('hidden'));
+            
+            // Show target pane
+            const targetPane = document.getElementById('pane-' + tabName);
+            if (targetPane) targetPane.classList.remove('hidden');
+
+            // Reset tab button active classes
+            const tabs = ['vol', 'temp', 'water', 'mix', 'power', 'light', 'compat'];
+            tabs.forEach(tab => {
+                const btn = document.getElementById('btn-tab-' + tab);
+                if (btn) {
+                    if (tab === tabName) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                }
+            });
+
+            // Update hash
+            window.location.hash = tabName;
+        }
+
+        // 1. Tank Volume and Stocking
+        function runVolCalc() {
+            const l = parseFloat(document.getElementById('vol-len').value) || 0;
+            const w = parseFloat(document.getElementById('vol-wid').value) || 0;
+            const h = parseFloat(document.getElementById('vol-hei').value) || 0;
+
+            const vol = (l * w * h) / 1000;
+            const roundedVol = Math.round(vol * 10) / 10;
+            const fishCm = Math.round(vol);
+
+            document.getElementById('out-vol-liters').innerText = `${roundedVol} لتر`;
+            document.getElementById('out-vol-cm').innerText = `${fishCm} سم إجمالاً`;
+
+            // Sync with other tabs
+            document.getElementById('temp-vol').value = Math.round(vol);
+            document.getElementById('light-vol').value = Math.round(vol);
+
+            // Update stocking simulator maximum capacity
+            globalMaxStockingCm = fishCm;
+            if (typeof recalculateStocking === 'function') {
+                recalculateStocking();
+            }
+
+            // Recalculate dependent values
+            runTempCalc();
+            runLightCalc();
+        }
+
+        // 2. Cooling & Temperature Control
+        function runTempCalc() {
+            const vol = parseFloat(document.getElementById('temp-vol').value) || 0;
+            const ambient = parseFloat(document.getElementById('temp-ambient').value) || 0;
+            const target = 25; // standard target water temperature in Celsius
+
+            const delta = Math.max(0, ambient - target);
+            document.getElementById('out-temp-delta').innerText = `${delta}°م`;
+
+            const listEl = document.getElementById('out-temp-actions');
+            listEl.innerHTML = '';
+
+            if (vol <= 0) {
+                listEl.innerHTML = '<li>يرجى تحديد سعة الحوض.</li>';
+                return;
+            }
+
+            // Generate customized cooling strategies
+            const steps = [];
+            steps.push(`<strong>استخدام مضخة هواء وأحجار هواء قوية:</strong> صعود الفقاعات باستمرار يعوض الأكسجين الذائب المفقود بالحرارة ويجلب المياه الباردة للأعلى.`);
+            steps.push(`<strong>تحريك متموج للسطح:</strong> وجه مخارج الفلتر للسطح لكسر التوتر المائي وزيادة مساحة التماس والتبريد بالتبخر.`);
+            steps.push(`<strong>مروحة تبريد تبخيرية 12 فولت:</strong> موجهة بزاوية 45 درجة للسطح لخفض الحرارة من 2-4 درجات.`);
+            
+            if (ambient >= 40) {
+                steps.push(`<strong>تنسيق تشغيل تكييف الغرفة:</strong> نظراً لأن درجة الحرارة المحيطة (${ambient}°م) عالية جداً، فالمروحة وحدها لن تكفي. شغل تكييف الغرفة وقت الذروة (11ص - 4م) لتهيئة بيئة محيطة ملائمة.`);
+            }
+            
+            steps.push(`<strong>التعويض بماء RO حصراً:</strong> التبخير العالي يتطلب تعبئة يومية بماء RO نقي لتجنب ارتفاع الملوحة المفرط (TDS).`);
+            
+            if (delta >= 10) {
+                steps.push(`<strong>قوالب الثلج البلاستيكية للطوارئ:</strong> ضع زجاجات مياه مجمدة ومغلقة بإحكام داخل الفلتر أو السامب ببطء خلال ذروة الحرارة.`);
+            }
+
+            steps.forEach(step => {
+                const li = document.createElement('li');
+                li.innerHTML = step;
+                listEl.appendChild(li);
+            });
+        }
+
+        // 3. Water parameters pH & TDS
+        function runWaterCalc() {
+            const currPh = parseFloat(document.getElementById('wat-curr-ph').value) || 0;
+            const targPh = parseFloat(document.getElementById('wat-targ-ph').value) || 0;
+            const currTds = parseFloat(document.getElementById('wat-curr-tds').value) || 0;
+            const targTds = parseFloat(document.getElementById('wat-targ-tds').value) || 0;
+
+            let tdsAdvice = "";
+            let phAdvice = "";
+
+            // TDS Advice
+            if (currTds <= targTds) {
+                tdsAdvice = "الملوحة الحالية ممتازة ومطابقة للهدف. لا تتطلب مياه التناضح العكسي (RO).";
+            } else {
+                const ratio = (currTds - targTds) / (currTds - 15);
+                const pct = Math.round(ratio * 100);
+                tdsAdvice = `الملوحة مرتفعة. ينصح بخلط نسبة ${pct}% من مياه التناضح العكسي (RO) مع مياه الصنبور للحصول على ملوحة مناسبة.`;
+            }
+
+            // pH Advice
+            if (currPh <= targPh) {
+                phAdvice = "الـ pH ملائم للحد المستهدف ولا يحتاج لتخفيض.";
+            } else {
+                const diff = currPh - targPh;
+                if (diff < 0.4) {
+                    phAdvice = "استخدم أوراق الكاتابا الطبيعية أو أخشاب المانغروف لخفض تدريجي وآمن للـ pH.";
+                } else {
+                    phAdvice = "يتطلب تصفية المياه عبر كتل الخث (Peat Moss) في الفلتر، والخلط بمياه الـ RO لكسر العسر القلوي القوي.";
+                }
+            }
+
+            document.getElementById('out-wat-tds-advice').innerText = tdsAdvice;
+            document.getElementById('out-wat-ph-advice').innerText = phAdvice;
+        }
+
+        // 4. RO Mixing calculation
+        function runMixCalc() {
+            const tap = parseFloat(document.getElementById('mix-tap-tds').value) || 0;
+            const target = parseFloat(document.getElementById('mix-target-tds').value) || 0;
+            const ro = 15; // standard baseline for residential RO filters
+
+            if (tap <= target) {
+                document.getElementById('out-mix-ro-pct').innerText = `0%`;
+                document.getElementById('out-mix-tap-pct').innerText = `100%`;
+                return;
+            }
+
+            // Ratio of RO needed = (tap - target) / (tap - ro)
+            const roRatio = (tap - target) / (tap - ro);
+            const roPct = Math.round(roRatio * 100);
+            const tapPct = 100 - roPct;
+
+            document.getElementById('out-mix-ro-pct').innerText = `${roPct}%`;
+            document.getElementById('out-mix-tap-pct').innerText = `${tapPct}%`;
+        }
+
+        // 5. Electricity calculation
+        function runPowerCalc() {
+            const filterW = parseFloat(document.getElementById('pow-filter').value) || 0;
+            const lightW = parseFloat(document.getElementById('pow-light').value) || 0;
+            const heaterW = parseFloat(document.getElementById('pow-heater').value) || 0;
+            const tariff = parseFloat(document.getElementById('pow-tariff').value) || 0;
+
+            // Monthly kWh calculation
+            // Filter runs 24h, Lights run 8h, Heater runs average 12h
+            const filterKwh = (filterW * 24 * 30) / 1000;
+            const lightKwh = (lightW * 8 * 30) / 1000;
+            const heaterKwh = (heaterW * 12 * 30) / 1000;
+
+            const totalKwh = filterKwh + lightKwh + heaterKwh;
+            const totalCost = totalKwh * tariff;
+
+            document.getElementById('out-power-kwh').innerText = `${Math.round(totalKwh * 10) / 10} كيلوواط/ساعة`;
+            document.getElementById('out-power-cost').innerText = `${Math.round(totalCost).toLocaleString()} فلس / دينار`;
+        }
+
+        // 6. Lighting and Algae control
+        function runLightCalc() {
+            const type = document.getElementById('light-type').value;
+            const vol = parseFloat(document.getElementById('light-vol').value) || 0;
+
+            let watt = 0;
+            let hours = "6 إلى 8 ساعات يومياً";
+
+            if (type === 'fish') {
+                // Low light requirement
+                watt = Math.round(vol * 0.15); // 0.15w per liter for fish-only
+                hours = "6 ساعات كحد أقصى (لتجنب الخز)";
+            } else {
+                // Planted aquariums
+                watt = Math.round(vol * 0.4); // 0.4w per liter average LED
+                hours = "7 إلى 8 ساعات (مع مانع طحالب)";
+            }
+
+            document.getElementById('out-light-watt').innerText = `${watt} واط LED`;
+            document.getElementById('out-light-hours').innerText = hours;
+        }
+
+        // 7. Fish Compatibility Matrix
+        function runCompatCalc() {
+            const fishA = document.getElementById('compat-fish-a').value;
+            const fishB = document.getElementById('compat-fish-b').value;
+
+            const badge = document.getElementById('out-compat-badge');
+            const text = document.getElementById('out-compat-text');
+
+            if (fishA === fishB) {
+                // Same species generally compatible (except Betta)
+                if (fishA === 'flowerhorn') {
+                    badge.innerText = "غير متوافق مطلقاً";
+                    badge.className = "badge badge-danger";
+                    text.innerText = "أسماك الفلور هورن عدوانية جداً من نفس فصيلتها، ويجب تربيتها منفردة في حوض خاص بها كلياً لتفادي الاقتتال المميت.";
+                } else if (fishA === 'oscar') {
+                    badge.innerText = "متوافق بحذر";
+                    badge.className = "badge badge-warning";
+                    text.innerText = "يمكن لأسماك الأوسكار العيش معاً فقط إذا كان الحوض كبيراً جداً (500+ لتر) ويحتوي على مخابئ كافية لتقليص مساحات السيطرة.";
+                } else {
+                    badge.innerText = "متوافق جداً";
+                    badge.className = "badge badge-success";
+                    text.innerText = "تتعايش هذه الفصيلة مع أفراد جنسها بشكل ممتاز وآمن دون أي مشاكل سلوكية.";
+                }
+                return;
+            }
+
+            // Cross-species compatibility matrix logic
+            let rating = ""; // 'yes', 'no', 'warning'
+            let reason = "";
+
+            const pairs = {
+                'oscar_guppy': { rating: 'no', reason: 'سمكة الأوسكار وحشية مفترسة وستلتهم الغابي الصغير فوراً كغذاء لها.' },
+                'oscar_neon': { rating: 'no', reason: 'النيون تترا فريسة سهلة وسريعة للافتراس من الأوسكار.' },
+                'oscar_flowerhorn': { rating: 'no', reason: 'سيتعاركان بعنف شديد لفرض السيطرة الإقليمية حتى الموت.' },
+                'oscar_discus': { rating: 'no', reason: 'الأوسكار حركته عنيفة وسريعة، والديسكس سمكة خجولة وهادئة ستصاب بصدمة وتتوقف عن الأكل.' },
+                'oscar_goldfish': { rating: 'no', reason: 'الجولد فيش مياه باردة وهادئة، والأوسكار استوائي دافئ وعدواني.' },
+                'oscar_pleco': { rating: 'yes', reason: 'سمكة الزبال تعيش في القاع ومدرعة، ولا يتداخل سلوكها مع الأوسكار.' },
+                
+                'flowerhorn_guppy': { rating: 'no', reason: 'الفلور هورن سيفترس ويمزق ذيول الغابي في ثوانٍ.' },
+                'flowerhorn_neon': { rating: 'no', reason: 'النيون فريسة فورية للفلور هورن الشرس.' },
+                'flowerhorn_discus': { rating: 'no', reason: 'الفلور هورن سمكة وحشية تدمر الديسكس الرقيق فوراً.' },
+                'flowerhorn_goldfish': { rating: 'no', reason: 'الفلور هورن سيقتل الجولد فيش بسبب عدوانيته المفرطة.' },
+                'flowerhorn_pleco': { rating: 'warning', reason: 'الفلور هورن قد يهاجم الزبال؛ ينجح الدمج فقط في أحواض ضخمة مع وجود مخابئ حجرية للزبال.' },
+
+                'goldfish_discus': { rating: 'no', reason: 'الجولد فيش يفضل مياه باردة (18-22°م) بينما الديسكس يتطلب مياه دافئة جداً (28-30°م).' },
+                'goldfish_guppy': { rating: 'warning', reason: 'الجولد فيش الكبير قد يبتلع الغابي الصغير بمجرد اتساع فمه له.' },
+                'goldfish_neon': { rating: 'no', reason: 'الجولد فيش سيبتلع النيون تترا بمجرد نمو حجمه، كما أن متطلبات الحرارة مختلفة.' },
+                'goldfish_pleco': { rating: 'yes', reason: 'يتعايشان بسلام، لكن احذر من التصاق الزبال أحياناً بجسم الجولد لامتصاص المخاط.' },
+
+                'discus_neon': { rating: 'yes', reason: 'توافق بيئي مثالي، كلاهما يفضل مياه ناعمة وحمضية هادئة (الأمازون).' },
+                'discus_guppy': { rating: 'warning', reason: 'الغابي نشيط وحركته قد تزعج الديسكس الهادئ، وتفضيل المياه العسرة مختلف قليلاً.' },
+                'discus_pleco': { rating: 'yes', reason: 'الزبال الهادئ (خاصة الأنواع القزمية كالأنسيستروس) رفيق مثالي للديسكس.' },
+
+                'guppy_neon': { rating: 'yes', reason: 'كلاهما أسماك مجتمعية صغيرة وهادئة وتتعايش بسلام تام.' },
+                'guppy_pleco': { rating: 'yes', reason: 'الزبال ينظف القاع والغابي يسبح في الجزء العلوي بسلام.' },
+                'neon_pleco': { rating: 'yes', reason: 'تكامل ممتاز بين سكان القاع وسكان المنتصف الهادئين.' }
+            };
+
+            const key1 = `${fishA}_${fishB}`;
+            const key2 = `${fishB}_${fishA}`;
+            const match = pairs[key1] || pairs[key2];
+
+            if (match) {
+                rating = match.rating;
+                reason = match.reason;
+            } else {
+                // Default fallback if not directly mapped
+                rating = 'warning';
+                reason = 'توافق نسبي. يفضل استشارة الخبراء للتأكد من ملاءمة خواص المياه والحرارة لكلا النوعين.';
+            }
+
+            // Render output values
+            if (rating === 'yes') {
+                badge.innerText = "متوافق جداً";
+                badge.className = "badge badge-success";
+            } else if (rating === 'no') {
+                badge.innerText = "غير متوافق (وحشي / افتراس)";
+                badge.className = "badge badge-danger";
+            } else {
+                badge.innerText = "متوافق بحذر";
+                badge.className = "badge badge-warning";
+            }
+
+            text.innerText = reason;
+        }
+
+        // Stocking Simulator Logic
+        const commonFishes = [
+            { id: 'neon', name: 'نيون تترا', size: 3, nameEn: 'Neon Tetra' },
+            { id: 'guppy', name: 'سمك الغابي / كابي', size: 5, nameEn: 'Guppy' },
+            { id: 'platy', name: 'بلاتي', size: 5, nameEn: 'Platy' },
+            { id: 'molly', name: 'مولي شائعة', size: 6, nameEn: 'Molly' },
+            { id: 'betta', name: 'سمكة الفايتر / بيتا', size: 6, nameEn: 'Betta' },
+            { id: 'cory', name: 'شيلد / كوري كاتفيش', size: 5, nameEn: 'Corydoras' },
+            { id: 'barb', name: 'بارب سوماترا (تايجر)', size: 7, nameEn: 'Tiger Barb' },
+            { id: 'sword', name: 'سوردتيل (سيف)', size: 8, nameEn: 'Swordtail' },
+            { id: 'discus', name: 'ديسكس فاخر', size: 15, nameEn: 'Discus' },
+            { id: 'angel', name: 'أنجل فيش / ملكية', size: 15, nameEn: 'Angelfish' },
+            { id: 'goldfish', name: 'جولد فيش / أورندا', size: 15, nameEn: 'Goldfish' },
+            { id: 'oscar', name: 'أوسكار سيكلايد', size: 30, nameEn: 'Oscar' },
+            { id: 'pleco', name: 'الزبال / الكناس الشائع', size: 30, nameEn: 'Pleco' }
+        ];
+
+        let selectedFishQty = {};
+        let globalMaxStockingCm = 200;
+
+        function initStockingSimulator() {
+            const listEl = document.getElementById('sim-fish-list');
+            if (!listEl) return;
+            listEl.innerHTML = '';
+            commonFishes.forEach(fish => {
+                selectedFishQty[fish.id] = 0;
+                
+                const row = document.createElement('div');
+                row.className = 'fish-item-row';
+                row.innerHTML = `
+                    <div class="fish-info">
+                        <span class="fish-name">${fish.name}</span>
+                        <span class="fish-size-badge">${fish.nameEn} • معدل الحجم: ${fish.size} سم</span>
+                    </div>
+                    <div class="fish-qty-controls">
+                        <button type="button" class="fish-qty-btn" onclick="adjustFishQty('${fish.id}', -1)">-</button>
+                        <span id="qty-${fish.id}" class="fish-qty-val">0</span>
+                        <button type="button" class="fish-qty-btn" onclick="adjustFishQty('${fish.id}', 1)">+</button>
+                    </div>
+                `;
+                listEl.appendChild(row);
+            });
+        }
+
+        function adjustFishQty(fishId, delta) {
+            if (selectedFishQty[fishId] === undefined) selectedFishQty[fishId] = 0;
+            selectedFishQty[fishId] = Math.max(0, selectedFishQty[fishId] + delta);
+            const qtyEl = document.getElementById(`qty-${fishId}`);
+            if (qtyEl) qtyEl.innerText = selectedFishQty[fishId];
+            recalculateStocking();
+        }
+
+        function recalculateStocking() {
+            let totalCm = 0;
+            commonFishes.forEach(fish => {
+                const qty = selectedFishQty[fish.id] || 0;
+                totalCm += qty * fish.size;
+            });
+
+            const currentLenEl = document.getElementById('sim-current-len');
+            const maxCapEl = document.getElementById('sim-max-cap');
+            if (currentLenEl) currentLenEl.innerText = `${totalCm} سم`;
+            if (maxCapEl) maxCapEl.innerText = `${globalMaxStockingCm} سم`;
+
+            const progressBar = document.getElementById('sim-progress-bar');
+            const statusBox = document.getElementById('sim-status-box');
+
+            if (!progressBar || !statusBox) return;
+
+            if (globalMaxStockingCm <= 0) {
+                progressBar.style.width = '0%';
+                statusBox.className = 'stocking-status-box status-danger';
+                statusBox.innerText = 'يرجى تحديد أبعاد صحيحة للحوض أولاً لتحديد السعة.';
+                return;
+            }
+
+            const pct = Math.min(100, (totalCm / globalMaxStockingCm) * 100);
+            progressBar.style.width = `${pct}%`;
+
+            if (pct <= 60) {
+                progressBar.style.backgroundColor = 'var(--color-success)';
+            } else if (pct <= 85) {
+                progressBar.style.backgroundColor = 'var(--color-warning)';
+            } else {
+                progressBar.style.backgroundColor = '#ef4444';
+            }
+
+            if (totalCm === 0) {
+                statusBox.className = 'stocking-status-box status-safe';
+                statusBox.innerText = 'الحوض فارغ حالياً، يرجى إضافة بعض الأسماك للتحقق من السعة.';
+            } else if (totalCm <= globalMaxStockingCm * 0.7) {
+                statusBox.className = 'stocking-status-box status-safe';
+                statusBox.innerText = `التسكين آمن ومثالي! (${Math.round(pct)}% من القدرة الاستيعابية). الأسماك تمتلك حيزاً ممتازاً للسباحة.`;
+            } else if (totalCm <= globalMaxStockingCm) {
+                statusBox.className = 'stocking-status-box status-warning';
+                statusBox.innerText = `انتبه: اقتربت من الحد الأقصى! (${Math.round(pct)}% من القدرة الاستيعابية). يفضل تقليل العدد لتسهيل الفلترة.`;
+            } else {
+                statusBox.className = 'stocking-status-box status-danger';
+                statusBox.innerText = `تنبيه: الحوض مكتظ ومزدحم للغاية! (${Math.round(pct)}% من القدرة الاستيعابية). هناك خطورة من صدمة الأمونيا وتراجع جودة المياه.`;
+            }
+        }
+
+        // Theme Manager
+        function applySavedTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            if (savedTheme === 'light') {
+                document.documentElement.classList.add('light');
+                document.documentElement.classList.remove('dark');
+                document.getElementById('theme-btn').innerText = '🌙';
+            } else {
+                document.documentElement.classList.remove('light');
+                document.documentElement.classList.add('dark');
+                document.getElementById('theme-btn').innerText = '🌞';
+            }
+        }
+
+        function toggleTheme() {
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            applySavedTheme();
+        }
+
+        // On Page Load
+        window.addEventListener('DOMContentLoaded', () => {
+            applySavedTheme();
+            initStockingSimulator();
+            
+            // Check for direct tab links from hash
+            const hash = window.location.hash.substring(1);
+            if (['vol', 'temp', 'water', 'mix', 'power', 'light', 'compat'].includes(hash)) {
+                switchTab(hash);
+            } else {
+                switchTab('vol');
+            }
+
+            // Run initial logic calculations
+            runVolCalc();
+            runTempCalc();
+            runWaterCalc();
+            runMixCalc();
+            runPowerCalc();
+            runLightCalc();
+            runCompatCalc();
+        });
+    </script>
+</body>
+</html>

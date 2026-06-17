@@ -34,7 +34,7 @@
             
             <div style="display: flex; align-items: center; gap: 12px;">
                 <!-- Conditional Calculator Link in Header -->
-                <a id="header-calc-link" href="extensions/calculator/calculator.html" class="btn-primary" style="display: none; text-decoration: none;">
+                <a id="header-calc-link" href="calculator.html" class="btn-primary" style="display: none; text-decoration: none;">
                     🧮 <span class="nav-btn-text">الحاسبة البيئية</span>
                 </a>
 
@@ -261,7 +261,7 @@
             const calcHeaderLink = document.getElementById('header-calc-link');
             if (article.calculatorTab) {
                 calcHeaderLink.style.display = 'inline-flex';
-                calcHeaderLink.href = `extensions/calculator/calculator.html#${article.calculatorTab}`;
+                calcHeaderLink.href = `calculator.html#${article.calculatorTab}`;
             } else {
                 calcHeaderLink.style.display = 'none';
             }

@@ -1,33 +1,34 @@
 /**
- * Premium Modular Aquarium Calculator Component
- * Designed for Middle Eastern Freshwater Ecosystems
- * 
- * Auto-injects HTML structure and handles reactive state updates.
+ * Premium Modular Aquarium Calculator - Middle East Edition
+ * Updates: Focus on non-chiller practical cooling (air pumps, surface agitation, room AC coordination)
  */
 class AquariumCalculator {
     constructor(containerId) {
         this.container = document.getElementById(containerId);
         if (!this.container) {
-            console.error(`AquariumCalculator: Container ID "${containerId}" not found.`);
+            console.error(`AquariumCalculator: Container "${containerId}" not found.`);
             return;
         }
-        
+
         // Initial state values
+        let defaultTab = 'vol';
+        const hash = window.location.hash.substring(1);
+        if (['vol', 'temp', 'water'].includes(hash)) {
+            defaultTab = hash;
+        }
+
         this.state = {
-            activeTab: 'vol', // 'vol', 'temp', 'water'
-            
-            // Vol Tab
+            activeTab: defaultTab,
+            // Tank parameters
             length: 100,
-            width: 45,
+            width: 40,
             height: 50,
             avgFishSize: 5,
-            
-            // Temp Tab
-            tankVol: 225,
+            // Cooling parameters (summer)
+            tankVol: 200,
             ambientTemp: 45,
             targetTemp: 25,
-            
-            // Water Tab
+            // Chemistry parameters
             tapTds: 1200,
             targetTds: 250,
             tapPh: 8.4,
@@ -45,160 +46,154 @@ class AquariumCalculator {
 
     render() {
         this.container.innerHTML = `
-            <div class="glass-card" style="padding: 20px;">
+            <div class="calc-widget">
                 <!-- Widget Header -->
-                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid var(--border-glass); padding-bottom: 12px;">
-                    <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(14, 165, 233, 0.15); display: flex; align-items: center; justify-center; color: var(--color-primary); justify-content: center;">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid rgba(14, 165, 233, 0.15); padding-bottom: 12px;">
+                    <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(14, 165, 233, 0.15); display: flex; align-items: center; justify-content: center; color: var(--calc-primary);">
                         <svg style="width: 24px; height: 24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 11h.01M12 7h.01M15 11h.01M4 19V5a2 2 0 012-2h12a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
                         </svg>
                     </div>
                     <div>
-                        <h3 style="font-weight: 800; font-size: 15px; color: var(--text-primary); margin: 0;">حاسبة الأكواريوم التفاعلية</h3>
-                        <p style="font-size: 11px; color: var(--color-primary); margin: 0;">إعدادات متطابقة مع مياه ومناخ المنطقة</p>
+                        <h3 style="font-weight: 800; font-size: 15px; color: #f8fafc; margin: 0;">حاسبة الأكواريوم التفاعلية</h3>
+                        <p style="font-size: 11px; color: var(--calc-primary); margin: 0;">الحلول الاقتصادية لتبريد وتعديل مياه الحوض</p>
                     </div>
                 </div>
 
-                <!-- Tab Navigation -->
-                <div class="tab-nav">
-                    <button class="tab-btn ${this.state.activeTab === 'vol' ? 'active' : ''}" data-tab="vol">الحجم والأسماك</button>
-                    <button class="tab-btn ${this.state.activeTab === 'temp' ? 'active' : ''}" data-tab="temp">التبريد والحرارة</button>
-                    <button class="tab-btn ${this.state.activeTab === 'water' ? 'active' : ''}" data-tab="water">تعديل الأملاح</button>
+                <!-- Tabs -->
+                <div class="calc-tabs">
+                    <button class="calc-tab-btn ${this.state.activeTab === 'vol' ? 'active' : ''}" data-tab="vol">الحجم والسعة</button>
+                    <button class="calc-tab-btn ${this.state.activeTab === 'temp' ? 'active' : ''}" data-tab="temp">إدارة الصيف والتبريد</button>
+                    <button class="calc-tab-btn ${this.state.activeTab === 'water' ? 'active' : ''}" data-tab="water">ملوحة ومزج المياه</button>
                 </div>
 
                 <!-- Tab Panels -->
+                
                 <!-- 1. Volume & Stocking -->
-                <div id="pane-vol" class="tab-pane ${this.state.activeTab === 'vol' ? 'active' : ''}">
-                    <div class="input-group">
-                        <div style="display: flex; justify-content: space-between;">
-                            <span class="input-label">طول الحوض (سم)</span>
-                            <span id="val-length" style="font-size:12px; font-weight:700; color:var(--text-primary);">${this.state.length} سم</span>
+                <div id="pane-vol" class="calc-pane ${this.state.activeTab === 'vol' ? 'active' : ''}">
+                    <div class="calc-control">
+                        <div class="calc-label-row">
+                            <span class="calc-label">طول الحوض (سم)</span>
+                            <span id="val-length" class="calc-value-badge">${this.state.length} سم</span>
                         </div>
-                        <input type="range" id="range-length" min="30" max="300" step="5" value="${this.state.length}">
+                        <input type="range" id="range-length" min="30" max="250" step="5" class="calc-slider" value="${this.state.length}">
                     </div>
-                    <div class="input-group">
-                        <div style="display: flex; justify-content: space-between;">
-                            <span class="input-label">عرض الحوض (سم)</span>
-                            <span id="val-width" style="font-size:12px; font-weight:700; color:var(--text-primary);">${this.state.width} سم</span>
+                    <div class="calc-control">
+                        <div class="calc-label-row">
+                            <span class="calc-label">عرض الحوض (سم)</span>
+                            <span id="val-width" class="calc-value-badge">${this.state.width} سم</span>
                         </div>
-                        <input type="range" id="range-width" min="20" max="150" step="5" value="${this.state.width}">
+                        <input type="range" id="range-width" min="20" max="120" step="5" class="calc-slider" value="${this.state.width}">
                     </div>
-                    <div class="input-group">
-                        <div style="display: flex; justify-content: space-between;">
-                            <span class="input-label">ارتفاع الحوض (سم)</span>
-                            <span id="val-height" style="font-size:12px; font-weight:700; color:var(--text-primary);">${this.state.height} سم</span>
+                    <div class="calc-control">
+                        <div class="calc-label-row">
+                            <span class="calc-label">ارتفاع الحوض (سم)</span>
+                            <span id="val-height" class="calc-value-badge">${this.state.height} سم</span>
                         </div>
-                        <input type="range" id="range-height" min="20" max="150" step="5" value="${this.state.height}">
+                        <input type="range" id="range-height" min="20" max="120" step="5" class="calc-slider" value="${this.state.height}">
                     </div>
-                    <div class="input-group">
-                        <div style="display: flex; justify-content: space-between;">
-                            <span class="input-label">متوسط حجم السمكة (سم)</span>
-                            <span id="val-avg-size" style="font-size:12px; font-weight:700; color:var(--text-primary);">${this.state.avgFishSize} سم</span>
+                    <div class="calc-control">
+                        <div class="calc-label-row">
+                            <span class="calc-label">متوسط حجم السمكة (سم)</span>
+                            <span id="val-avg-size" class="calc-value-badge">${this.state.avgFishSize} سم</span>
                         </div>
-                        <input type="range" id="range-avg-size" min="2" max="25" step="1" value="${this.state.avgFishSize}">
+                        <input type="range" id="range-avg-size" min="2" max="20" step="1" class="calc-slider" value="${this.state.avgFishSize}">
                     </div>
 
-                    <div class="output-box">
-                        <div class="output-row">
-                            <span class="output-label">السعة المائية الكلية:</span>
-                            <span id="out-volume" class="output-value primary">0 لتر</span>
+                    <div class="calc-results">
+                        <div class="calc-result-row">
+                            <span class="calc-result-label">حجم المياه الإجمالي:</span>
+                            <span id="out-volume" class="calc-result-val primary">0 لتر</span>
                         </div>
-                        <div class="output-row">
-                            <span class="output-label">أقصى سعة أسماك (طول تراكمي):</span>
-                            <span id="out-stock-cm" class="output-value success">0 سم</span>
+                        <div class="calc-result-row">
+                            <span class="calc-result-label">الحد الأقصى لطول الأسماك:</span>
+                            <span id="out-stock-cm" class="calc-result-val success">0 سم</span>
                         </div>
-                        <div class="output-row">
-                            <span class="output-label">العدد المقدر للأسماك:</span>
-                            <span id="out-stock-count" class="output-value success">0 أسماك</span>
+                        <div class="calc-result-row">
+                            <span class="calc-result-label">العدد المقدر للأسماك:</span>
+                            <span id="out-stock-count" class="calc-result-val success">0 أسماك</span>
                         </div>
-                        <div class="output-note">
-                            ⚠️ تم تطبيق قاعدة (1 سم سمكة لكل 1 لتر مياه). للأسماك النهرية الكبيرة النشطة في منطقتنا (مثل البني والشبوط)، يوصى بتقليل العدد بنسبة 40% لتوفير مساحة سباحة كافية.
+                        <div class="calc-alert-box success">
+                            📝 <strong>معيار السعة:</strong> تم استخدام قاعدة (1 لتر لكل 1 سم من طول السمكة). للأسماك المحلية مثل البني، يوصى بمضاعفة السعة لكل سمكة.
                         </div>
                     </div>
                 </div>
 
-                <!-- 2. Temperature & Cooling -->
-                <div id="pane-temp" class="tab-pane ${this.state.activeTab === 'temp' ? 'active' : ''}">
-                    <div class="input-group">
-                        <div style="display: flex; justify-content: space-between;">
-                            <span class="input-label">حجم مياه الحوض (لتر)</span>
-                            <span id="val-tank-vol" style="font-size:12px; font-weight:700; color:var(--text-primary);">${this.state.tankVol} لتر</span>
+                <!-- 2. Temperature & cooling (Practical non-chiller advice) -->
+                <div id="pane-temp" class="calc-pane ${this.state.activeTab === 'temp' ? 'active' : ''}">
+                    <div class="calc-control">
+                        <div class="calc-label-row">
+                            <span class="calc-label">حجم الحوض (لتر)</span>
+                            <span id="val-tank-vol" class="calc-value-badge">${this.state.tankVol} لتر</span>
                         </div>
-                        <input type="range" id="range-tank-vol" min="10" max="1500" step="10" value="${this.state.tankVol}">
+                        <input type="range" id="range-tank-vol" min="10" max="1000" step="10" class="calc-slider" value="${this.state.tankVol}">
                     </div>
-                    <div class="input-group">
-                        <div style="display: flex; justify-content: space-between;">
-                            <span class="input-label">أعلى حرارة للغرفة في الصيف (°م)</span>
-                            <span id="val-ambient" style="font-size:12px; font-weight:700; color:var(--text-primary);">${this.state.ambientTemp}°م</span>
+                    <div class="calc-control">
+                        <div class="calc-label-row">
+                            <span class="calc-label">أعلى حرارة متوقعة للغرفة (°م)</span>
+                            <span id="val-ambient" class="calc-value-badge">${this.state.ambientTemp}°م</span>
                         </div>
-                        <input type="range" id="range-ambient" min="20" max="55" step="1" value="${this.state.ambientTemp}">
+                        <input type="range" id="range-ambient" min="25" max="52" step="1" class="calc-slider" value="${this.state.ambientTemp}">
                     </div>
-                    <div class="input-group">
-                        <div style="display: flex; justify-content: space-between;">
-                            <span class="input-label">الحرارة المستهدفة للماء (°م)</span>
-                            <span id="val-target-temp" style="font-size:12px; font-weight:700; color:var(--text-primary);">${this.state.targetTemp}°م</span>
+                    <div class="calc-control">
+                        <div class="calc-label-row">
+                            <span class="calc-label">الحرارة المستهدفة للماء (°م)</span>
+                            <span id="val-target-temp" class="calc-value-badge">${this.state.targetTemp}°م</span>
                         </div>
-                        <input type="range" id="range-target-temp" min="18" max="32" step="1" value="${this.state.targetTemp}">
+                        <input type="range" id="range-target-temp" min="20" max="30" step="1" class="calc-slider" value="${this.state.targetTemp}">
                     </div>
 
-                    <div class="output-box">
-                        <div class="output-row">
-                            <span class="output-label">فرق درجة الحرارة المطلوب خفضه:</span>
-                            <span id="out-temp-delta" class="output-value primary">0°م</span>
+                    <div class="calc-results">
+                        <div class="calc-result-row">
+                            <span class="calc-result-label">الفارق الحراري المطلوب خفضه:</span>
+                            <span id="out-temp-delta" class="calc-result-val primary">0°م</span>
                         </div>
-                        <div class="output-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
-                            <span class="output-label">التبريد الصيفي الموصى به:</span>
-                            <span id="out-cooling-sys" class="output-value primary" style="font-size: 13px; text-align: right; width: 100%; margin-top: 4px;">-</span>
-                        </div>
-                        <div class="output-row">
-                            <span class="output-label">طاقة السخان الشتوي:</span>
-                            <span id="out-heating-sys" class="output-value success">0 واط</span>
-                        </div>
-                        <div class="output-note">
-                            🌡️ عندما تتعدى حرارة الغرفة 40°م، لا تجدي المراوح نفعاً للأحواض الكبيرة بسبب زيادة معدل التبخر الذي يرفع ملوحة الحوض بشكل حاد؛ استخدام المبردات (Chillers) الفريونية ضروري.
+                        
+                        <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px; margin-top: 5px;">
+                            <h5 style="color: #38bdf8; font-size:12px; font-weight:700; margin-bottom:8px;">إجراءات تبريد اقتصادية (بدون مبرد فريون مكلف):</h5>
+                            <ul id="cooling-action-list" style="list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 11px; color: #cbd5e1; padding-right: 0;">
+                                <!-- dynamically generated list items -->
+                            </ul>
                         </div>
                     </div>
                 </div>
 
-                <!-- 3. Water Parameters -->
-                <div id="pane-water" class="tab-pane ${this.state.activeTab === 'water' ? 'active' : ''}">
-                    <div class="input-group">
-                        <div style="display: flex; justify-content: space-between;">
-                            <span class="input-label">ملوحة مياه الصنبور (TDS - ppm)</span>
-                            <span id="val-tap-tds" style="font-size:12px; font-weight:700; color:var(--text-primary);">${this.state.tapTds} ppm</span>
+                <!-- 3. Water parameters (RO mixing) -->
+                <div id="pane-water" class="calc-pane ${this.state.activeTab === 'water' ? 'active' : ''}">
+                    <div class="calc-control">
+                        <div class="calc-label-row">
+                            <span class="calc-label">ملوحة مياه الحنفية (TDS - ppm)</span>
+                            <span id="val-tap-tds" class="calc-value-badge">${this.state.tapTds} ppm</span>
                         </div>
-                        <input type="range" id="range-tap-tds" min="100" max="2500" step="50" value="${this.state.tapTds}">
+                        <input type="range" id="range-tap-tds" min="100" max="2200" step="50" class="calc-slider" value="${this.state.tapTds}">
                     </div>
-                    <div class="input-group">
-                        <div style="display: flex; justify-content: space-between;">
-                            <span class="input-label">الملوحة المستهدفة (TDS - ppm)</span>
-                            <span id="val-target-tds" style="font-size:12px; font-weight:700; color:var(--text-primary);">${this.state.targetTds} ppm</span>
+                    <div class="calc-control">
+                        <div class="calc-label-row">
+                            <span class="calc-label">الملوحة المستهدفة (TDS - ppm)</span>
+                            <span id="val-target-tds" class="calc-value-badge">${this.state.targetTds} ppm</span>
                         </div>
-                        <input type="range" id="range-target-tds" min="50" max="1000" step="25" value="${this.state.targetTds}">
+                        <input type="range" id="range-target-tds" min="50" max="800" step="25" class="calc-slider" value="${this.state.targetTds}">
                     </div>
                     
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px;">
-                        <div class="input-group">
-                            <span class="input-label">الرقم الهيدروجيني للحنفية (pH)</span>
-                            <input type="number" id="num-tap-ph" step="0.1" min="5" max="10" value="${this.state.tapPh}" class="input-field" style="padding: 6px 12px;">
+                    <div class="calc-input-row">
+                        <div class="calc-input-box">
+                            <span class="calc-label" style="font-size:11px;">الـ pH للحنفية</span>
+                            <input type="number" id="num-tap-ph" step="0.1" min="5.0" max="9.5" class="calc-number-field" value="${this.state.tapPh}">
                         </div>
-                        <div class="input-group">
-                            <span class="input-label">الـ pH المستهدف</span>
-                            <input type="number" id="num-target-ph" step="0.1" min="5" max="10" value="${this.state.targetPh}" class="input-field" style="padding: 6px 12px;">
+                        <div class="calc-input-box">
+                            <span class="calc-label" style="font-size:11px;">الـ pH المستهدف</span>
+                            <input type="number" id="num-target-ph" step="0.1" min="5.0" max="9.5" class="calc-number-field" value="${this.state.targetPh}">
                         </div>
                     </div>
 
-                    <div class="output-box">
-                        <div class="output-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
-                            <span class="output-label">وصفة خلط المياه المثالية:</span>
-                            <span id="out-water-mix" class="output-value primary" style="font-size: 13px; margin-top: 4px; text-align: right; width: 100%;">0%</span>
+                    <div class="calc-results">
+                        <div class="calc-result-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                            <span class="calc-result-label">توزيع خلط المياه الموصى به:</span>
+                            <span id="out-water-mix" class="calc-result-val primary" style="font-size:13px; text-align:right; width:100%; margin-top:4px;">0%</span>
                         </div>
-                        <div class="output-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
-                            <span class="output-label">إجراءات خفض الرقم الهيدروجيني (pH):</span>
-                            <span id="out-ph-action" class="output-value success" style="font-size: 13px; margin-top: 4px; text-align: right; width: 100%;">-</span>
-                        </div>
-                        <div class="output-note">
-                            💧 مياه نهري دجلة والفرات ومياه الآبار والتحلية بالمنطقة تتميز بارتفاع العسر الكلي والـ pH. الحل السليم يكمن في دمج مياه التناضح العكسي (RO) الغنية بالغازات الذائبة.
+                        <div class="calc-result-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                            <span class="calc-result-label">إجراءات خفض الرقم الهيدروجيني:</span>
+                            <span id="out-ph-action" class="calc-result-val success" style="font-size:12px; text-align:right; width:100%; margin-top:4px;">-</span>
                         </div>
                     </div>
                 </div>
@@ -207,32 +202,31 @@ class AquariumCalculator {
     }
 
     bindEvents() {
-        // Tab switching
-        const tabBtns = this.container.querySelectorAll('.tab-btn');
+        const tabBtns = this.container.querySelectorAll('.calc-tab-btn');
         tabBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const tab = e.target.getAttribute('data-tab');
                 this.state.activeTab = tab;
-                
-                // Update UI state
+                window.location.hash = tab;
+
                 tabBtns.forEach(b => b.classList.remove('active'));
                 e.target.classList.add('active');
 
-                const panes = this.container.querySelectorAll('.tab-pane');
+                const panes = this.container.querySelectorAll('.calc-pane');
                 panes.forEach(p => p.classList.remove('active'));
-                
+
                 const activePane = this.container.querySelector(`#pane-${tab}`);
                 if (activePane) activePane.classList.add('active');
             });
         });
 
-        // Event listeners for Vol Tab ranges
+        // 1. Volume Bindings
         const rLength = this.container.querySelector('#range-length');
         const rWidth = this.container.querySelector('#range-width');
         const rHeight = this.container.querySelector('#range-height');
         const rAvgSize = this.container.querySelector('#range-avg-size');
 
-        const updateVolState = () => {
+        const updateVol = () => {
             this.state.length = parseInt(rLength.value);
             this.state.width = parseInt(rWidth.value);
             this.state.height = parseInt(rHeight.value);
@@ -243,31 +237,30 @@ class AquariumCalculator {
             this.container.querySelector('#val-height').innerText = `${this.state.height} سم`;
             this.container.querySelector('#val-avg-size').innerText = `${this.state.avgFishSize} سم`;
 
-            // Auto sync calculated volume to Temp Tab volume input state
-            const calculatedVol = Math.round((this.state.length * this.state.width * this.state.height) / 1000);
-            this.state.tankVol = calculatedVol;
+            const calcVolume = Math.round((this.state.length * this.state.width * this.state.height) / 1000);
+            this.state.tankVol = calcVolume;
             const rTankVol = this.container.querySelector('#range-tank-vol');
             if (rTankVol) {
-                rTankVol.value = calculatedVol;
-                this.container.querySelector('#val-tank-vol').innerText = `${calculatedVol} لتر`;
+                rTankVol.value = calcVolume;
+                this.container.querySelector('#val-tank-vol').innerText = `${calcVolume} لتر`;
             }
 
             this.updateCalculations();
         };
 
         if (rLength) {
-            rLength.addEventListener('input', updateVolState);
-            rWidth.addEventListener('input', updateVolState);
-            rHeight.addEventListener('input', updateVolState);
-            rAvgSize.addEventListener('input', updateVolState);
+            rLength.addEventListener('input', updateVol);
+            rWidth.addEventListener('input', updateVol);
+            rHeight.addEventListener('input', updateVol);
+            rAvgSize.addEventListener('input', updateVol);
         }
 
-        // Event listeners for Temp Tab ranges
+        // 2. Temp Bindings
         const rTankVol = this.container.querySelector('#range-tank-vol');
         const rAmbient = this.container.querySelector('#range-ambient');
         const rTargetTemp = this.container.querySelector('#range-target-temp');
 
-        const updateTempState = () => {
+        const updateTemp = () => {
             this.state.tankVol = parseInt(rTankVol.value);
             this.state.ambientTemp = parseInt(rAmbient.value);
             this.state.targetTemp = parseInt(rTargetTemp.value);
@@ -280,18 +273,18 @@ class AquariumCalculator {
         };
 
         if (rTankVol) {
-            rTankVol.addEventListener('input', updateTempState);
-            rAmbient.addEventListener('input', updateTempState);
-            rTargetTemp.addEventListener('input', updateTempState);
+            rTankVol.addEventListener('input', updateTemp);
+            rAmbient.addEventListener('input', updateTemp);
+            rTargetTemp.addEventListener('input', updateTemp);
         }
 
-        // Event listeners for Water Tab inputs
+        // 3. Water Bindings
         const rTapTds = this.container.querySelector('#range-tap-tds');
         const rTargetTds = this.container.querySelector('#range-target-tds');
         const nTapPh = this.container.querySelector('#num-tap-ph');
         const nTargetPh = this.container.querySelector('#num-target-ph');
 
-        const updateWaterState = () => {
+        const updateWater = () => {
             this.state.tapTds = parseInt(rTapTds.value);
             this.state.targetTds = parseInt(rTargetTds.value);
             this.state.tapPh = parseFloat(nTapPh.value) || 7.0;
@@ -304,115 +297,138 @@ class AquariumCalculator {
         };
 
         if (rTapTds) {
-            rTapTds.addEventListener('input', updateWaterState);
-            rTargetTds.addEventListener('input', updateWaterState);
-            nTapPh.addEventListener('input', updateWaterState);
-            nTargetPh.addEventListener('input', updateWaterState);
+            rTapTds.addEventListener('input', updateWater);
+            rTargetTds.addEventListener('input', updateWater);
+            nTapPh.addEventListener('input', updateWater);
+            nTargetPh.addEventListener('input', updateWater);
         }
     }
 
     updateCalculations() {
-        // 1. Volume & Stocking Tab logic
+        // Tab 1 calculations
         const volume = (this.state.length * this.state.width * this.state.height) / 1000;
         const roundedVol = Math.round(volume * 10) / 10;
-        const maxStockingCm = Math.round(volume);
-        const estimatedFishCount = Math.floor(maxStockingCm / this.state.avgFishSize);
+        const maxStocking = Math.round(volume);
+        const fishCount = Math.floor(maxStocking / this.state.avgFishSize);
 
-        const outVol = this.container.querySelector('#out-volume');
-        const outStockCm = this.container.querySelector('#out-stock-cm');
-        const outStockCount = this.container.querySelector('#out-stock-count');
+        const oVol = this.container.querySelector('#out-volume');
+        const oStock = this.container.querySelector('#out-stock-cm');
+        const oCount = this.container.querySelector('#out-stock-count');
 
-        if (outVol) outVol.innerText = `${roundedVol} لتر`;
-        if (outStockCm) outStockCm.innerText = `${maxStockingCm} سم تراكمي`;
-        if (outStockCount) outStockCount.innerText = `${estimatedFishCount} أسماك (حجم ${this.state.avgFishSize}سم)`;
+        if (oVol) oVol.innerText = `${roundedVol} لتر`;
+        if (oStock) oStock.innerText = `${maxStocking} سم إجمالاً`;
+        if (oCount) oCount.innerText = `${fishCount} أسماك`;
 
-        // 2. Temp & Cooling Tab logic
+        // Tab 2 calculations - Realistic Non-Chiller Cooling
         const tempDelta = Math.max(0, this.state.ambientTemp - this.state.targetTemp);
-        const outTempDelta = this.container.querySelector('#out-temp-delta');
-        if (outTempDelta) outTempDelta.innerText = `${tempDelta}°م`;
+        const oDelta = this.container.querySelector('#out-temp-delta');
+        if (oDelta) oDelta.innerText = `${tempDelta}°م`;
 
-        let coolingRecommendation = "";
-        if (this.state.tankVol <= 0) {
-            coolingRecommendation = "حدد حجم الحوض أولاً";
-        } else if (tempDelta <= 2) {
-            coolingRecommendation = "لا يتطلب نظام تبريد خاص (التهوية العادية للغرفة كافية)";
-        } else if (tempDelta <= 4 && this.state.tankVol <= 100) {
-            coolingRecommendation = "نظام مراوح تبريد تبخيرية مزدوجة (يخفض من 2-4 درجات)";
-        } else {
-            // Summer Heat High Delta or Large Aquarium Volume
-            const vol = this.state.tankVol;
-            if (vol < 80) {
-                coolingRecommendation = "مروحة تبخيرية رباعية أو مبرد إلكتروني حراري (Peltier)";
-            } else if (vol <= 160) {
-                coolingRecommendation = "مبرد فريون (Chiller) قوة 1/12 حصان";
-            } else if (vol <= 320) {
-                coolingRecommendation = "مبرد فريون (Chiller) قوة 1/10 حصان";
-            } else if (vol <= 600) {
-                coolingRecommendation = "مبرد فريون (Chiller) قوة 1/4 حصان";
+        const coolingList = this.container.querySelector('#cooling-action-list');
+        if (coolingList) {
+            coolingList.innerHTML = '';
+            
+            if (tempDelta === 0) {
+                coolingList.innerHTML = '<li style="color:var(--calc-success);">✓ درجة حرارة الغرفة ملائمة للمعدل المستهدف. لا حاجة للتبريد الإضافي.</li>';
             } else {
-                coolingRecommendation = "مبرد فريون (Chiller) قوة 1/2 حصان أو مكيف هواء مخصص للغرفة";
+                // Generate step-by-step practical suggestions based on delta and volume
+                const actions = [];
+                
+                // 1. Air Pump & Dissolved Oxygen
+                actions.push({
+                    title: "زيادة التبخر وتبادل الغازات (مضخة الهواء)",
+                    desc: "شغل مضخة هواء قوية مع حجري هواء. الماء الدافئ يفقد الأكسجين بسرعة؛ صعود الفقاعات يزيد مساحة التلامس بين الماء والهواء، مما يسرع التبريد الذاتي بالتبخير ويعوض الأكسجين المفقود."
+                });
+
+                // 2. Surface Agitation
+                actions.push({
+                    title: "تحريك سطح الماء بالفلتر / مضخة التيار",
+                    desc: "وجه مخرجات الفلتر أو مضخة تيار صغيرة للأعلى لكسر سطح الماء بقوة. التموج السطحي المستمر يضاعف من معدل تبدد الحرارة الكامنة عبر تبخير الماء الحار."
+                });
+
+                // 3. Evaporative Fan
+                actions.push({
+                    title: "توجيه مروحة تبريد تبخيرية (بقدرة 12 فولت)",
+                    desc: "ثبت مروحة هواء صغيرة موجهة مباشرة بزاوية 45 درجة نحو السطح. هذه الطريقة تخفض حرارة الماء بمقدار 2°م إلى 4°م بمجرد استغلال برودة التبخير."
+                });
+
+                // 4. Room Cooling Coordination
+                if (this.state.ambientTemp >= 40) {
+                    actions.push({
+                        title: "تنسيق تكييف الغرفة (المكيف المنزلي)",
+                        desc: `بما أن درجة حرارة الغرفة (${this.state.ambientTemp}°م) مرتفعة جداً، فالمروحة وحدها لن تكفي. شغل تكييف الغرفة خلال ساعات الذروة (11 صباحاً - 4 مساءً) لتقليص الحرارة المحيطة للغرفة إلى حوالي 28°م، مما يريح كاهل الحوض.`
+                    });
+                }
+
+                // 5. ATO Warning (Daily Top-Off)
+                actions.push({
+                    title: "تعويض التبخر بماء RO حصراً (هام جداً)",
+                    desc: "التبخير المكثف سيخفض منسوب المياه يومياً. يجب استخدام نظام ATO (التعويض التلقائي) أو تعبئة الفارق بماء RO (خالٍ من الأملاح). إذا عوّضت الفاقد بماء الحنفية، سترتفع ملوحة الحوض بشكل قاتل مع الوقت!"
+                });
+
+                // 6. Emergency DIY Ice bottles
+                if (tempDelta >= 10) {
+                    actions.push({
+                        title: "قوالب الثلج البلاستيكية (حالات الطوارئ)",
+                        desc: "في أوقات الارتفاع الحاد والمؤقت، ضع زجاجات بلاستيكية مجمدة ومغلقة بإحكام داخل الفلتر الخلفي أو حوض التعقيم. تجنب إلقاء الثلج المباشر حتى لا تقتل البكتيريا النافعة بصدمة حرارية موضعية."
+                    });
+                }
+
+                actions.forEach((act, idx) => {
+                    const li = document.createElement('li');
+                    li.style.marginBottom = '6px';
+                    li.innerHTML = `
+                        <div style="font-weight: 700; color: #38bdf8; margin-bottom: 2px;">${idx + 1}. ${act.title}</div>
+                        <div style="color: #94a3b8; padding-right: 10px; text-align: justify;">${act.desc}</div>
+                    `;
+                    coolingList.appendChild(li);
+                });
             }
         }
-        
-        const outCooling = this.container.querySelector('#out-cooling-sys');
-        if (outCooling) outCooling.innerText = coolingRecommendation;
 
-        // Winter heater sizing (~1 Watt per 1 Liter for average room)
-        const heaterWattage = Math.round(this.state.tankVol * 1.0);
-        let heaterText = "";
-        if (heaterWattage <= 25) heaterText = "سخان 25 واط";
-        else if (heaterWattage <= 50) heaterText = "سخان 50 واط";
-        else if (heaterWattage <= 100) heaterText = "سخان 100 واط";
-        else if (heaterWattage <= 200) heaterText = "سخان 200 واط";
-        else if (heaterWattage <= 300) heaterText = "سخان 300 واط";
-        else heaterText = `سخانين بقوة إجمالية تبلغ ${heaterWattage} واط`;
-
-        const outHeating = this.container.querySelector('#out-heating-sys');
-        if (outHeating) outHeating.innerText = heaterText;
-
-        // 3. Water Parameter Tab logic
+        // Tab 3 calculations
         const tapTds = this.state.tapTds;
         const targetTds = this.state.targetTds;
-        const roTds = 15; // standard RO system output TDS
+        const roTds = 15;
         
         let mixResult = "";
         if (tapTds <= targetTds) {
-            mixResult = "مياه الحنفية ممتازة وملوحتها مناسبة ولا تتطلب مياه RO";
+            mixResult = "مياه الصنبور ممتازة وملوحتها مطابقة للهدف، لا داعي للخلط بالـ RO.";
         } else if (targetTds <= roTds) {
-            mixResult = "يتطلب مياه RO نقية 100% مع إضافة أملاح معدنية مخصصة للأحواض";
+            mixResult = "تحتاج لمياه تناضح عكسي (RO) صافية 100% مع إضافة مستحضرات التمليح.";
         } else {
             const roPercentage = (tapTds - targetTds) / (tapTds - roTds);
             const roPct = Math.round(roPercentage * 100);
             const tapPct = 100 - roPct;
-            mixResult = `خلط: ${roPct}% مياه تناضح عكسي (RO) + ${tapPct}% مياه حنفية معالجة بالكلور`;
+            mixResult = `خلط: ${roPct}% مياه RO مع ${tapPct}% مياه حنفية معالجة`;
         }
 
-        const outWaterMix = this.container.querySelector('#out-water-mix');
-        if (outWaterMix) outWaterMix.innerText = mixResult;
+        const oWaterMix = this.container.querySelector('#out-water-mix');
+        if (oWaterMix) oWaterMix.innerText = mixResult;
 
         const tapPh = this.state.tapPh;
         const targetPh = this.state.targetPh;
         let phActionText = "";
 
         if (tapPh <= targetPh) {
-            phActionText = "الـ pH الحالي مناسب ولا يحتاج لتعديل للأسفل.";
+            phActionText = "الـ pH ملائم؛ لا يتطلب تعديلاً للأسفل.";
         } else {
             const phDiff = tapPh - targetPh;
             if (phDiff < 0.4) {
-                phActionText = "إضافة أوراق الكاتابا الطبيعية (أوراق اللوز الهندي) بمعدل ورقة لكل 50 لتر.";
+                phActionText = "إضافة أوراق الكاتابا الطبيعية أو أخشاب المانغروف؛ تخفض الـ pH تدريجياً وآمناً.";
             } else if (phDiff < 1.0) {
-                phActionText = "تصفية المياه عبر الخث الطبيعي (Peat Moss) في الفلتر، مع الخلط بالـ RO.";
+                phActionText = "تصفية المياه عبر كتل الخث (Peat Moss) المدمجة بالفلترة، مع زيادة معدل خلط الـ RO.";
             } else {
-                phActionText = "الخلط المكثف بالـ RO هو الحل الأمثل خفضاً آمناً، أو استخدام مخفضات pH كيميائية بجرعات بطيئة للغاية لعدم صدم الأسماك.";
+                phActionText = "الخلط المركز بمياه الـ RO هو الطريقة الوحيدة الفعالة والآمنة لكسر عسر الكربونات المرتفع بالمنطقة.";
             }
         }
 
-        const outPhAction = this.container.querySelector('#out-ph-action');
-        if (outPhAction) outPhAction.innerText = phActionText;
+        const oPhAction = this.container.querySelector('#out-ph-action');
+        if (oPhAction) oPhAction.innerText = phActionText;
     }
 }
 
-// Auto-initialize when file is included in simple setups
+// Global expose
 window.initAquariumCalculator = function(containerId) {
     return new AquariumCalculator(containerId);
 };

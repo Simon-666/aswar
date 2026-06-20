@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منتدى رافدين وأعماق | دليل الأكواريوم العربي للمياه العذبة</title>
+    <title>منتدى أعماق الرافدين | دليل الأكواريوم العربي للمياه العذبة</title>
     <meta name="description" content="منتدى حواري مهني متخصص في تربية أسماك المياه العذبة بالوطن العربي والخليج. نقاشات حول كيمياء المياه، التبريد الصيفي، والأنواع النهرية المحلية.">
     
     <!-- Google Fonts: Tajawal & Inter -->
@@ -27,7 +27,7 @@
                         </svg>
                     </div>
                     <div class="logo-text">
-                        <h1>منتدى رافدين وأعماق</h1>
+                        <h1>منتدى أعماق الرافدين</h1>
                         <p>المجتمع الحواري للمياه العذبة في العراق والخليج</p>
                     </div>
                 </a>
@@ -48,6 +48,16 @@
 
     <!-- Main Grid -->
     <main class="app-container">
+        
+        <!-- Forum Hero Header -->
+        <section class="forum-hero">
+            <div class="hero-glow-1"></div>
+            <div class="hero-glow-2"></div>
+            <h2 class="hero-title">بوابة أعماق الرافدين الحوارية 🌊</h2>
+            <p class="hero-desc">
+                المجتمع العربي الأول المهتم بتربية أسماك المياه العذبة، كيمياء ومزج المياه، حلول التبريد صيفاً، والتوافق الإيكولوجي للأنواع النهرية بالشرق الأوسط والخليج.
+            </p>
+        </section>
         
         <!-- Forum Feed -->
         <section style="display: flex; flex-direction: column;">
@@ -151,11 +161,82 @@
             </div>
         </section>
 
+        <!-- FAQ Section -->
+        <section class="faq-section">
+            <div class="faq-header">
+                <span class="faq-subtitle">إجابات سريعة ومبنية على أسس علمية</span>
+                <h2 class="faq-title">❓ الأسئلة الأكثر شيوعاً للهواة بالمنطقة</h2>
+            </div>
+            
+            <div class="faq-accordion">
+                <!-- Item 1 -->
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>كيف أخفض درجة حرارة حوض السمك صيفاً بدون مبرد فريون؟</span>
+                        <span class="faq-icon">＋</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>الحل العملي يعتمد على **التبريد التبخيري**: 
+                        1. وجه مروحة تبريد صغيرة (12 فولت) بزاوية 45 درجة نحو سطح المياه المتموج.
+                        2. شغل مضخات هواء قوية لتعويض الأكسجين الذائب الذي يقل بفعل الحرارة.
+                        3. **مهم جداً:** عوض مياه التبخر اليومية بماء RO نكي فقط؛ تعويضها بماء الحنفية سيتسبب في تراكم الأملاح وارتفاع الملوحة (TDS) لمستويات خطيرة.</p>
+                    </div>
+                </div>
+                
+                <!-- Item 2 -->
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>ما هي النسبة الصحيحة لخلط مياه الحنفية ومياه الـ RO؟</span>
+                        <span class="faq-icon">＋</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>النسبة تعتمد على ملوحة الصنبور لديك. لهواة المياه العذبة، الملوحة المستهدفة المثالية هي **150-300 ppm**. 
+                        إذا كانت ملوحة مياه الحنفية 1200 ppm وملوحة ماء الـ RO هي 15 ppm، فإن الخلط بنسبة **75% مياه RO و 25% مياه صنبور** سيعطيك ملوحة تقارب 310 ppm وهي ممتازة وصالحة لأغلب الأسماك والنباتات.</p>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>ما هي القاعدة الذهبية لتحديد عدد الأسماك المناسب لحجم الحوض؟</span>
+                        <span class="faq-icon">＋</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>القاعدة الأساسية هي **(1 سم سمكة لكل 1 لتر ماء)** عند البلوغ للأسماك الصغيرة والهادئة. 
+                        ولكن للأسماك الكبيرة، الشرهة للأكل أو سريعة الحركة (مثل الشبوط والبني والأوسكار)، يجب تقليص العدد بنسبة **40% على الأقل** لتأمين مساحات سباحة ولتفادت تحميل الفلتر بفضلات عضوية تفوق قدرته على التفكيك.</p>
+                    </div>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>مياه الحوض أصبحت معكرة باللون الأبيض الضبابي، ما الحل؟</span>
+                        <span class="faq-icon">＋</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>هذا يسمى **الانفجار البكتيري (Bacterial Bloom)** ويحدث عادة في الأحواض الجديدة التي لم تكتمل دورتها النيتروجينية بعد، أو عند تنظيف الفلتر بشكل خاطئ بالكلور. 
+                        **الحل:** لا تقم بتبديل المياه بكثرة لأن ذلك يزيد المشكلة سوءاً. قلل التغذية للحد الأدنى، وزد تدفق الأكسجين، ودع البكتيريا النافعة تستقر في الفلتر، وستصفى المياه تلقائياً في غضون 3 إلى 5 أيام.</p>
+                    </div>
+                </div>
+
+                <!-- Item 5 -->
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>هل يمكنني استخدام المياه المكثفة من التكييف لتعويض التبخر؟</span>
+                        <span class="faq-icon">＋</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>**لا يجوز إطلاقاً!** بالرغم من خلو المياه المكثفة من الأملاح، إلا أنها تمر فوق زعانف التبريد النحاسية والألومنيوم داخل جهاز التكييف فتلتقط جزيئات معادن ثقيلة سامة جداً للأسماك، بالإضافة لكونها بيئة خصبة للفطريات والغبار والبكتيريا الهوائية المسببة للأمراض.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <!-- Footer -->
     <footer style="padding: 24px; border-top: 1px solid var(--border-color); text-align: center; color: var(--text-muted); font-size: 11px; font-family: var(--font-arabic); margin-top: 60px;">
-        <p>© 2026 رافدين وأعماق. منتدى هواة الأكواريوم الإقليمي.</p>
+        <p>© 2026 منتدى أعماق الرافدين. منتدى هواة الأكواريوم الإقليمي.</p>
     </footer>
 
     <!-- JS Logic for Theme & Dynamic Content -->
@@ -218,6 +299,25 @@
                     } catch (e) {}
                 }
                 document.getElementById(`replies-count-${id}`).innerText = count;
+            }
+        }
+
+        // FAQ Accordion Toggle
+        function toggleFaq(btn) {
+            const item = btn.parentElement;
+            const isOpen = item.classList.contains('active');
+            
+            // Close all items
+            document.querySelectorAll('.faq-item').forEach(el => {
+                el.classList.remove('active');
+                const answer = el.querySelector('.faq-answer');
+                answer.style.maxHeight = null;
+            });
+            
+            if (!isOpen) {
+                item.classList.add('active');
+                const answer = item.querySelector('.faq-answer');
+                answer.style.maxHeight = answer.scrollHeight + "px";
             }
         }
 

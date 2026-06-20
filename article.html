@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منتدى رافدين وأعماق | استعراض الموضوع</title>
+    <title>منتدى أعماق الرافدين | استعراض الموضوع</title>
     
     <!-- Google Fonts: Tajawal & Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,7 +26,7 @@
                         </svg>
                     </div>
                     <div class="logo-text">
-                        <h1>منتدى رافدين وأعماق</h1>
+                        <h1>منتدى أعماق الرافدين</h1>
                         <p>تصفح نقاشات الهواة</p>
                     </div>
                 </a>
@@ -89,23 +89,9 @@
 
         <!-- Comments Section -->
         <section class="comments-section">
-            <h3 class="comments-heading">الردود والمشاركات التفاعلية (<span id="comments-count">0</span>)</h3>
-            
-            <!-- Comment Form -->
-            <div class="comment-box">
-                <h4 style="font-size: 13px; font-weight: 700; margin-bottom: 6px; color: var(--text-secondary);">أضف مشاركة أو استفساراً:</h4>
-                <div style="display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 8px;">
-                    <input type="text" id="comment-author-input" class="calc-number-field" style="text-align: right; padding: 8px 12px;" placeholder="اسمك المستعار (مثال: هاوٍ من بغداد)">
-                    <textarea id="comment-textarea" class="comment-textarea" placeholder="اكتب ردك أو استفسارك هنا بكل وضوح وعلمية..."></textarea>
-                </div>
-                <div style="text-align: left;">
-                    <button class="btn-primary" onclick="submitComment()">أرسل الرد</button>
-                </div>
-            </div>
-
-            <!-- Comment List mount point -->
-            <div class="comment-list" id="comments-list">
-                <!-- Dynamically generated comments -->
+            <h3 class="comments-heading">💬 المناقشات والردود</h3>
+            <div id="cusdis-container">
+                <!-- Dynamically injected by JS to prevent race condition initialization -->
             </div>
         </section>
 
@@ -113,7 +99,7 @@
 
     <!-- Footer -->
     <footer style="padding: 24px; border-top: 1px solid var(--border-color); text-align: center; color: var(--text-muted); font-size: 11px; font-family: var(--font-arabic); margin-top: 60px;">
-        <p>© 2026 رافدين وأعماق. كافة الحقوق محفوظة.</p>
+        <p>© 2026 منتدى أعماق الرافدين. كافة الحقوق محفوظة.</p>
     </footer>
 
     <!-- Database and script -->
@@ -246,7 +232,7 @@
                 return;
             }
 
-            document.title = `${article.title} | منتدى رافدين وأعماق`;
+            document.title = `${article.title} | منتدى أعماق الرافدين`;
 
             document.getElementById('article-title').innerText = article.title;
             document.getElementById('article-author').innerText = article.author;
@@ -269,96 +255,34 @@
             // Handle views count
             handleViews(id);
 
-            // Load replies / comments
-            renderComments();
-        }
-
-        // Render Comments List
-        function renderComments() {
-            const id = currentArticleId;
-            const article = articlesDB[id];
-            
-            const listContainer = document.getElementById('comments-list');
-            listContainer.innerHTML = '';
-
-            // 1. Render default replies
-            let commentsCount = article.defaultReplies.length;
-            article.defaultReplies.forEach(comment => {
-                listContainer.appendChild(createCommentDOM(comment.author, comment.time, comment.body, true));
-            });
-
-            // 2. Render user replies from localStorage
-            const userRepliesKey = `replies_article_${id}`;
-            let userReplies = localStorage.getItem(userRepliesKey);
-            if (userReplies) {
-                try {
-                    const parsed = JSON.parse(userReplies);
-                    commentsCount += parsed.length;
-                    parsed.forEach(comment => {
-                        listContainer.appendChild(createCommentDOM(comment.author, comment.time, comment.body, false));
-                    });
-                } catch (e) {}
+            // Configure Cusdis dynamically
+            const container = document.getElementById('cusdis-container');
+            if (container) {
+                container.innerHTML = '';
+                const cusdisDiv = document.createElement('div');
+                cusdisDiv.id = 'cusdis_thread';
+                cusdisDiv.setAttribute('data-host', 'https://cusdis.com');
+                cusdisDiv.setAttribute('data-app-id', '624a0d9b-d784-486a-8b17-154df66a1a7c');
+                cusdisDiv.setAttribute('data-page-id', `article_${id}`);
+                cusdisDiv.setAttribute('data-page-url', window.location.href);
+                cusdisDiv.setAttribute('data-page-title', article.title);
+                
+                const savedTheme = localStorage.getItem('theme') || 'dark';
+                cusdisDiv.setAttribute('data-theme', savedTheme);
+                
+                container.appendChild(cusdisDiv);
+                
+                if (window.CUSDIS && typeof window.CUSDIS.initial === 'function') {
+                    window.CUSDIS.initial();
+                } else {
+                    const script = document.createElement('script');
+                    script.src = 'https://cusdis.com/js/cusdis.es.js';
+                    script.async = true;
+                    script.defer = true;
+                    document.body.appendChild(script);
+                }
             }
 
-            document.getElementById('comments-count').innerText = commentsCount;
-        }
-
-        // Create comment element DOM helper
-        function createCommentDOM(author, time, body, isDefault) {
-            const div = document.createElement('div');
-            div.className = 'comment-item';
-            if (isDefault) {
-                div.style.borderRight = '3px solid var(--color-primary)';
-            } else {
-                div.style.borderRight = '3px solid var(--color-success)';
-            }
-            div.innerHTML = `
-                <div class="comment-meta">
-                    <span class="comment-author">${author} ${isDefault ? '<span class="badge badge-success" style="font-size: 8px; padding: 1px 4px; margin-right: 4px;">عضو موثق</span>' : '<span class="badge" style="background:rgba(16, 185, 129, 0.08); color:var(--color-success); font-size: 8px; padding: 1px 4px; margin-right: 4px;">عضو زائر</span>'}</span>
-                    <span>${time}</span>
-                </div>
-                <div class="comment-body">${body}</div>
-            `;
-            return div;
-        }
-
-        // Submit Comment
-        function submitComment() {
-            const authorInput = document.getElementById('comment-author-input');
-            const textarea = document.getElementById('comment-textarea');
-
-            const author = authorInput.value.trim() || "هاوٍ زائر";
-            const body = textarea.value.trim();
-
-            if (!body) {
-                alert("الرجاء كتابة رد أولاً!");
-                return;
-            }
-
-            const newComment = {
-                author: author,
-                time: "الآن",
-                body: body
-            };
-
-            const userRepliesKey = `replies_article_${currentArticleId}`;
-            let userReplies = localStorage.getItem(userRepliesKey);
-            let repliesArray = [];
-
-            if (userReplies) {
-                try {
-                    repliesArray = JSON.parse(userReplies);
-                } catch(e) {}
-            }
-
-            repliesArray.push(newComment);
-            localStorage.setItem(userRepliesKey, JSON.stringify(repliesArray));
-
-            // Reset fields
-            textarea.value = '';
-            
-            // Re-render
-            renderComments();
         }
 
         // Support Alert dialog
@@ -371,14 +295,31 @@
             const savedTheme = localStorage.getItem('theme') || 'dark';
             document.documentElement.setAttribute('data-theme', savedTheme);
             document.getElementById('theme-btn').innerText = savedTheme === 'light' ? '🌙' : '🌞';
+            
+            // Sync theme to Cusdis if loaded
+            if (window.CUSDIS && typeof window.CUSDIS.setTheme === 'function') {
+                window.CUSDIS.setTheme(savedTheme);
+            }
         }
 
+        // Notify Cusdis on theme toggle
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             localStorage.setItem('theme', newTheme);
             document.documentElement.setAttribute('data-theme', newTheme);
             document.getElementById('theme-btn').innerText = newTheme === 'light' ? '🌙' : '🌞';
+            
+            // Update attribute on element for loading sync
+            const cusdisDiv = document.getElementById('cusdis_thread');
+            if (cusdisDiv) {
+                cusdisDiv.setAttribute('data-theme', newTheme);
+            }
+
+            // Sync theme to Cusdis if loaded
+            if (window.CUSDIS && typeof window.CUSDIS.setTheme === 'function') {
+                window.CUSDIS.setTheme(newTheme);
+            }
         }
 
         // Load content on ready
